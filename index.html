@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thrifty Homes - Fresh Groceries</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar container">
+      <a class="brand" href="index.html" aria-label="Thrifty Homes home">
+        <span class="logo" aria-hidden="true">TH</span>
+        <span class="brand-name">Thrifty Homes</span>
+      </a>
+
+      <div class="right-controls">
+        <a href="dashboard.html" class="nav-link has-tooltip" id="dashboardLink" data-tooltip="Visible only to admin, superstockist, stockist" hidden>Dashboard</a>
+        <a href="orders.html" class="nav-link" id="ordersLink" hidden>Orders</a>
+
+        <div class="profile-menu" id="profileMenu">
+          <button class="profile-btn" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
+            <span class="profile-icon" aria-hidden="true">👤</span>
+          </button>
+          <div class="dropdown" id="profileDropdown" role="menu" aria-label="User actions">
+            <a href="#" id="signinLink" role="menuitem">Sign In</a>
+            <a href="#" id="logoutLink" role="menuitem" hidden>Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="slideshow-wrap">
+      <div class="slideshow container" id="slideshow" aria-label="Brand highlights">
+        <article class="slide active" style="background-image: linear-gradient(120deg, rgba(6, 68, 55, 0.74), rgba(20, 32, 20, 0.35)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80');">
+          <div class="slide-content">
+            <p class="eyebrow">Fresh Every Morning</p>
+            <h1>Farm-picked groceries at neighborhood prices.</h1>
+            <p>Bring home crisp vegetables, pantry staples, and dairy essentials in one smooth delivery.</p>
+          </div>
+        </article>
+
+        <article class="slide" style="background-image: linear-gradient(120deg, rgba(66, 45, 5, 0.72), rgba(30, 22, 5, 0.35)), url('https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=1600&q=80');">
+          <div class="slide-content">
+            <p class="eyebrow">Low Cost Promise</p>
+            <h2>Daily value deals that keep your kitchen full.</h2>
+            <p>Smart bundles and budget-friendly pricing crafted for every home.</p>
+          </div>
+        </article>
+
+        <article class="slide" style="background-image: linear-gradient(120deg, rgba(7, 66, 52, 0.72), rgba(11, 22, 18, 0.35)), url('https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1600&q=80');">
+          <div class="slide-content">
+            <p class="eyebrow">Fast Door Delivery</p>
+            <h2>Stock your home in minutes, not hours.</h2>
+            <p>Order essentials and get them delivered fresh to your doorstep.</p>
+          </div>
+        </article>
+
+        <div class="slide-dots" id="slideDots" aria-label="Slide controls"></div>
+      </div>
+    </section>
+
+    <section class="catalog container" id="catalog">
+      <div class="products-pane">
+        <div class="section-head">
+          <h2>Grocery Catalog</h2>
+          <p>Pick your favorites and add them to cart.</p>
+        </div>
+        <div class="catalog-controls-row">
+          <div class="catalog-search-wrap">
+            <input
+              id="catalogSearch"
+              class="catalog-search"
+              type="search"
+              placeholder="Search groceries by name"
+              aria-label="Search grocery catalog"
+            />
+          </div>
+          <div class="catalog-filter-wrap">
+            <label for="catalogFilter" class="catalog-filter-label">Filter</label>
+            <select id="catalogFilter" class="catalog-filter" aria-label="Filter grocery catalog">
+              <option value="all">All Items</option>
+              <option value="grains">Grains</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="dairy">Dairy</option>
+              <option value="fruits">Fruits</option>
+            </select>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+        <div class="catalog-pagination" id="catalogPagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="floating-cart-bar" id="floatingCartBar">
+    <div class="floating-cart-meta">
+      <span id="floatingItemCount">0 items</span>
+      <strong id="floatingCartTotal">INR 0.00</strong>
+    </div>
+    <button class="checkout-btn" id="floatingCheckoutBtn" type="button">Checkout</button>
+  </div>
+
+  <div class="modal-overlay" id="signinModal" hidden>
+    <div class="signin-modal" role="dialog" aria-modal="true" aria-labelledby="signinTitle">
+      <button class="modal-close" id="closeSigninModal" type="button" aria-label="Close sign in">×</button>
+      <h2 id="signinTitle">Sign in to Thrifty Homes</h2>
+      <p>Continue with your social login account.</p>
+      <button class="google-login-btn" id="googleLoginBtn" type="button">
+        <span aria-hidden="true">G</span>
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

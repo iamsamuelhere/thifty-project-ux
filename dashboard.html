@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Thrifty Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar container dashboard-navbar">
+      <div class="dashboard-nav-left">
+        <a class="brand" href="index.html" aria-label="Thrifty Homes home">
+          <span class="logo" aria-hidden="true">TH</span>
+          <span class="brand-name">Thrifty Homes</span>
+        </a>
+      </div>
+      <div class="dashboard-nav-right">
+        <a class="back-link" href="index.html">← Back to Store</a>
+        <button class="profile-btn dashboard-profile-btn" type="button" aria-label="User profile">
+          <span class="profile-icon" aria-hidden="true">👤</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="dashboard-page container" id="dashboardPage">
+    <div class="dashboard-head">
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="dashboard-tabs" role="tablist" aria-label="Dashboard roles">
+      <button class="dashboard-tab active" data-dashboard-role="admin" type="button" role="tab" aria-selected="true">Admin</button>
+      <button class="dashboard-tab" data-dashboard-role="superstockist" type="button" role="tab" aria-selected="false">Superstockist</button>
+      <button class="dashboard-tab" data-dashboard-role="stockist" type="button" role="tab" aria-selected="false">Stockist</button>
+      <button class="dashboard-tab" data-dashboard-role="dealer" type="button" role="tab" aria-selected="false">Dealer</button>
+    </div>
+
+    <div class="dashboard-layout">
+      <aside class="dashboard-sidebar">
+        <h2 class="dashboard-sidebar-title" id="dashboardSidebarTitle">Admin</h2>
+        <p class="dashboard-sidebar-ref-chip" id="dashboardSidebarRefChip" hidden></p>
+        <nav aria-label="Dashboard menu">
+          <ul class="dashboard-menu" id="dashboardSidebarMenu"></ul>
+        </nav>
+      </aside>
+
+      <section class="dashboard-content" id="dashboardContent">
+        <div class="dashboard-content-head">
+          <h3 id="dashboardContentTitle">Admin Workspace</h3>
+          <button id="dashboardPrimaryAction" class="dashboard-primary-btn" type="button" hidden>+ Add New Product</button>
+        </div>
+        <p id="dashboardContentCopy">Use the menu on the left to access dashboard modules.</p>
+        <div id="dashboardContentBody" class="dashboard-content-body"></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="productEditorModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeProductEditor" type="button" aria-label="Close">✕</button>
+      <h2 id="productEditorTitle">Update Product</h2>
+      <form id="productEditorForm" class="product-editor-form">
+        <label for="editorTitle">Product Name</label>
+        <input id="editorTitle" name="title" type="text" required />
+
+        <label for="editorCategory">Category</label>
+        <select id="editorCategory" name="category" required>
+          <option value="grains">Grains</option>
+          <option value="vegetables">Vegetables</option>
+          <option value="dairy">Dairy</option>
+          <option value="fruits">Fruits</option>
+        </select>
+
+        <label for="editorDescription">Description</label>
+        <textarea id="editorDescription" name="description" rows="3" required></textarea>
+
+        <label for="editorPrice">Price (INR)</label>
+        <input id="editorPrice" name="price" type="number" min="0.01" step="0.01" required />
+
+        <label>Product Image</label>
+        <div class="mock-upload-row">
+          <button type="button" class="dashboard-secondary-btn" id="mockUploadBtn">Upload Image</button>
+          <span id="mockUploadFileName" class="mock-upload-name">No file selected</span>
+        </div>
+        <input id="editorImage" name="image" type="text" hidden />
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelProductEditor">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="userEditorModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeUserEditor" type="button" aria-label="Close">✕</button>
+      <h2>Add User</h2>
+      <form id="userEditorForm" class="product-editor-form">
+        <label for="userFirstName">First Name</label>
+        <input id="userFirstName" name="firstName" type="text" required />
+
+        <label for="userLastName">Last Name</label>
+        <input id="userLastName" name="lastName" type="text" required />
+
+        <label for="userEmail">Gmail ID</label>
+        <input id="userEmail" name="email" type="email" placeholder="name@gmail.com" required />
+
+        <label for="userRole">Role</label>
+        <select id="userRole" name="role" required>
+          <option value="Admin">Admin</option>
+          <option value="Superstockist">Superstockist</option>
+          <option value="Stockist">Stockist</option>
+        </select>
+
+        <label for="userReferenceNumber">Reference Number</label>
+        <input id="userReferenceNumber" name="referenceNumber" type="text" required />
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelUserEditor">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Save User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="stockistDealerModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeStockistDealerModal" type="button" aria-label="Close">✕</button>
+      <h2>Add Stockist or Dealer</h2>
+      <form id="stockistDealerForm" class="product-editor-form">
+        <label for="sdFirstName">First Name</label>
+        <input id="sdFirstName" name="firstName" type="text" required />
+
+        <label for="sdLastName">Last Name</label>
+        <input id="sdLastName" name="lastName" type="text" required />
+
+        <label for="sdEmail">Gmail ID</label>
+        <input id="sdEmail" name="email" type="email" placeholder="name@gmail.com" required />
+
+        <label for="sdType">Type</label>
+        <select id="sdType" name="type" required>
+          <option value="stockist">Stockist</option>
+          <option value="dealer">Dealer</option>
+        </select>
+
+        <label for="sdReferenceId">Reference ID</label>
+        <input id="sdReferenceId" name="referenceId" type="text" required />
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelStockistDealerModal">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="dealerInviteModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeDealerInviteModal" type="button" aria-label="Close">✕</button>
+      <h2>Add Dealer</h2>
+      <form id="dealerInviteForm" class="product-editor-form">
+        <label for="dealerFirstName">First Name</label>
+        <input id="dealerFirstName" name="firstName" type="text" required />
+
+        <label for="dealerLastName">Last Name</label>
+        <input id="dealerLastName" name="lastName" type="text" required />
+
+        <label for="dealerEmail">Gmail ID</label>
+        <input id="dealerEmail" name="email" type="email" placeholder="name@gmail.com" required />
+
+        <label for="dealerStockistRef">Stockist Reference ID</label>
+        <input id="dealerStockistRef" name="stockistReferenceId" type="text" required />
+
+        <label for="dealerRef">Dealer Reference ID</label>
+        <input id="dealerRef" name="dealerReferenceId" type="text" required />
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelDealerInviteModal">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="dispatchCompleteModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeDispatchCompleteModal" type="button" aria-label="Close">✕</button>
+      <h2>Update Dispatch</h2>
+      <form id="dispatchCompleteForm" class="product-editor-form">
+        <input id="dispatchOrderId" name="orderId" type="text" hidden />
+
+        <label for="dispatchComments">Comments</label>
+        <textarea id="dispatchComments" name="comments" rows="3" placeholder="Add dispatch notes"></textarea>
+
+        <label for="dispatchStatus">Dispatch Status</label>
+        <select id="dispatchStatus" name="dispatchStatus" required>
+          <option value="dispatched">Shipped</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        <div id="dispatchDateTimeRow">
+          <label for="dispatchCompletedAt">Dispatch Date & Time</label>
+          <input id="dispatchCompletedAt" name="completedAt" type="datetime-local" required />
+        </div>
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelDispatchCompleteModal">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Save Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="deleteConfirmModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeDeleteConfirmModal" type="button" aria-label="Close">✕</button>
+      <h2 id="deleteConfirmTitle">Confirm Deletion</h2>
+      <p id="deleteConfirmMessage">Are you sure you want to delete this user? This action cannot be undone.</p>
+      <div class="product-editor-actions">
+        <button type="button" class="dashboard-secondary-btn" id="cancelDeleteConfirmModal">Cancel</button>
+        <button type="button" class="dashboard-primary-btn" id="confirmDeleteConfirmModal">Confirm Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

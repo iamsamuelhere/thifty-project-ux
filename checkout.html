@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - Thrifty Homes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar container">
+      <a class="brand" href="index.html" aria-label="Back to home">
+        <span class="logo" aria-hidden="true">TH</span>
+        <span class="brand-name">Thrifty Homes</span>
+      </a>
+      <a class="back-link" href="index.html">← Continue Shopping</a>
+    </nav>
+  </header>
+
+  <main class="checkout-page container">
+    <aside class="checkout-summary-panel">
+      <h2>Order Summary</h2>
+      <div id="checkoutItems" class="checkout-items"></div>
+      <div class="checkout-total-row">
+        <span>Total</span>
+        <strong id="checkoutTotal">INR 0.00</strong>
+      </div>
+    </aside>
+
+    <section class="checkout-form-panel">
+      <h1>Checkout</h1>
+      <p class="checkout-copy">Provide your delivery details and choose a payment mode.</p>
+
+      <form class="checkout-form" id="checkoutForm">
+        <label for="referenceNumber">Reference Number</label>
+        <input id="referenceNumber" name="referenceNumber" type="text" placeholder="e.g. REF-2025-00123" />
+
+        <label for="fullName">Full Name</label>
+        <input id="fullName" name="fullName" type="text" placeholder="John Doe" required />
+
+        <label for="phone">Phone Number</label>
+        <input id="phone" name="phone" type="tel" placeholder="+1 555 123 4567" required />
+
+        <label for="address">Delivery Address</label>
+        <textarea id="address" name="address" rows="4" placeholder="House no, street, city, ZIP" required></textarea>
+
+        <label for="landmark">Landmark (Optional)</label>
+        <input id="landmark" name="landmark" type="text" placeholder="Near central market" />
+
+        <fieldset class="payment-options">
+          <legend>Payment Options</legend>
+          <label><input type="radio" name="payment" value="Cash on Delivery" checked /> Cash on Delivery</label>
+          <label><input type="radio" name="payment" value="UPI" /> UPI</label>
+          <label><input type="radio" name="payment" value="Credit/Debit Card" /> Credit/Debit Card</label>
+        </fieldset>
+
+        <button type="submit" class="place-order-btn">Place Order</button>
+      </form>
+      <p class="order-note" id="orderNote" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <!-- Mock Razorpay Modal -->
+  <div id="rzpModal" class="rzp-overlay" hidden>
+    <div class="rzp-modal">
+      <div class="rzp-header">
+        <div class="rzp-brand">
+          <svg width="22" height="22" viewBox="0 0 40 40" fill="none"><polygon points="20,2 38,36 2,36" fill="#fff" opacity="0.9"/></svg>
+          <span>Razorpay</span>
+        </div>
+        <div class="rzp-header-right">
+          <span id="rzpAmountDisplay" class="rzp-amount"></span>
+          <button type="button" class="rzp-close" id="rzpClose" aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="rzp-body">
+        <div class="rzp-tabs" role="tablist">
+          <button class="rzp-tab active" data-tab="upi" role="tab">UPI</button>
+          <button class="rzp-tab" data-tab="card" role="tab">Card</button>
+          <button class="rzp-tab" data-tab="netbanking" role="tab">Net Banking</button>
+          <button class="rzp-tab" data-tab="wallet" role="tab">Wallets</button>
+        </div>
+
+        <div class="rzp-panel" id="rzp-panel-upi">
+          <label class="rzp-label">Enter UPI ID</label>
+          <div class="rzp-input-row">
+            <input class="rzp-input" type="text" placeholder="yourname@upi" id="rzpUpiId" />
+            <button type="button" class="rzp-verify-btn">Verify</button>
+          </div>
+          <p class="rzp-hint">e.g. 9876543210@ybl or name@okicici</p>
+          <div class="rzp-upi-apps">
+            <button type="button" class="rzp-upi-app"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/120px-UPI-Logo-vector.svg.png" alt="UPI" /><span>Any UPI App</span></button>
+            <button type="button" class="rzp-upi-app"><span class="rzp-upi-icon" style="background:#5f259f">G</span><span>Google Pay</span></button>
+            <button type="button" class="rzp-upi-app"><span class="rzp-upi-icon" style="background:#0057ff">Ph</span><span>PhonePe</span></button>
+            <button type="button" class="rzp-upi-app"><span class="rzp-upi-icon" style="background:#f7941d">P</span><span>Paytm</span></button>
+          </div>
+        </div>
+
+        <div class="rzp-panel" id="rzp-panel-card" hidden>
+          <label class="rzp-label">Card Number</label>
+          <input class="rzp-input" type="text" placeholder="1234  5678  9012  3456" maxlength="19" id="rzpCardNum" />
+          <div class="rzp-row-2">
+            <div>
+              <label class="rzp-label">Expiry</label>
+              <input class="rzp-input" type="text" placeholder="MM / YY" maxlength="7" />
+            </div>
+            <div>
+              <label class="rzp-label">CVV</label>
+              <input class="rzp-input" type="password" placeholder="•••" maxlength="4" />
+            </div>
+          </div>
+          <label class="rzp-label">Name on Card</label>
+          <input class="rzp-input" type="text" placeholder="As printed on card" />
+        </div>
+
+        <div class="rzp-panel" id="rzp-panel-netbanking" hidden>
+          <label class="rzp-label">Select your Bank</label>
+          <div class="rzp-bank-grid">
+            <button type="button" class="rzp-bank">SBI</button>
+            <button type="button" class="rzp-bank">HDFC</button>
+            <button type="button" class="rzp-bank">ICICI</button>
+            <button type="button" class="rzp-bank">Axis</button>
+            <button type="button" class="rzp-bank">Kotak</button>
+            <button type="button" class="rzp-bank">PNB</button>
+            <button type="button" class="rzp-bank">BOB</button>
+            <button type="button" class="rzp-bank">Yes Bank</button>
+          </div>
+        </div>
+
+        <div class="rzp-panel" id="rzp-panel-wallet" hidden>
+          <label class="rzp-label">Select Wallet</label>
+          <div class="rzp-bank-grid">
+            <button type="button" class="rzp-bank">Paytm</button>
+            <button type="button" class="rzp-bank">Mobikwik</button>
+            <button type="button" class="rzp-bank">Freecharge</button>
+            <button type="button" class="rzp-bank">Airtel</button>
+          </div>
+        </div>
+
+        <button type="button" class="rzp-pay-btn" id="rzpPayBtn">Pay <span id="rzpPayAmount"></span></button>
+        <p class="rzp-secure">🔒 Secured by Razorpay</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
