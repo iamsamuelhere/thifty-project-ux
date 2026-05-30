@@ -5,7 +5,7 @@ const products = [
     category: "grains",
     description: "5kg long-grain rice, soft texture and rich taste.",
     price: 12.99,
-    image: createGroceryImage("Premium Rice", "Grains", "#f6edd5", "#d7be89")
+    image: createGroceryImage("Premium Rice", "Grains", "#f6edd5", "#d7be89"),
   },
   {
     id: "tomatoes",
@@ -13,7 +13,12 @@ const products = [
     category: "vegetables",
     description: "Juicy red tomatoes picked from local farms.",
     price: 2.49,
-    image: createGroceryImage("Fresh Tomatoes", "Vegetables", "#fde3df", "#ee8f85")
+    image: createGroceryImage(
+      "Fresh Tomatoes",
+      "Vegetables",
+      "#fde3df",
+      "#ee8f85",
+    ),
   },
   {
     id: "milk-pack",
@@ -21,7 +26,7 @@ const products = [
     category: "dairy",
     description: "1L full-cream milk, chilled and delivered fresh.",
     price: 1.99,
-    image: createGroceryImage("Farm Milk", "Dairy", "#e5efff", "#9ab8ef")
+    image: createGroceryImage("Farm Milk", "Dairy", "#e5efff", "#9ab8ef"),
   },
   {
     id: "fruit-basket",
@@ -29,7 +34,7 @@ const products = [
     category: "fruits",
     description: "Seasonal fruits for healthy snacking at home.",
     price: 8.75,
-    image: createGroceryImage("Fruit Basket", "Fruits", "#fff1d8", "#f0bf6f")
+    image: createGroceryImage("Fruit Basket", "Fruits", "#fff1d8", "#f0bf6f"),
   },
   {
     id: "wheat-flour",
@@ -37,7 +42,12 @@ const products = [
     category: "grains",
     description: "Stone-ground atta, perfect for soft chapatis.",
     price: 3.25,
-    image: createGroceryImage("Whole Wheat Flour", "Grains", "#f8ecd6", "#debd85")
+    image: createGroceryImage(
+      "Whole Wheat Flour",
+      "Grains",
+      "#f8ecd6",
+      "#debd85",
+    ),
   },
   {
     id: "brown-rice",
@@ -45,7 +55,7 @@ const products = [
     category: "grains",
     description: "Nutritious fiber-rich rice for healthy meals.",
     price: 4.6,
-    image: createGroceryImage("Brown Rice", "Grains", "#efe5d7", "#c6a77c")
+    image: createGroceryImage("Brown Rice", "Grains", "#efe5d7", "#c6a77c"),
   },
   {
     id: "potatoes",
@@ -53,7 +63,12 @@ const products = [
     category: "vegetables",
     description: "Farm-fresh potatoes ideal for curries and fries.",
     price: 1.85,
-    image: createGroceryImage("Fresh Potatoes", "Vegetables", "#f6e9ce", "#d7b57f")
+    image: createGroceryImage(
+      "Fresh Potatoes",
+      "Vegetables",
+      "#f6e9ce",
+      "#d7b57f",
+    ),
   },
   {
     id: "onions",
@@ -61,7 +76,7 @@ const products = [
     category: "vegetables",
     description: "Crisp and pungent onions for everyday cooking.",
     price: 1.7,
-    image: createGroceryImage("Red Onions", "Vegetables", "#f4e2ee", "#ce90ba")
+    image: createGroceryImage("Red Onions", "Vegetables", "#f4e2ee", "#ce90ba"),
   },
   {
     id: "carrots",
@@ -69,7 +84,12 @@ const products = [
     category: "vegetables",
     description: "Sweet carrots packed with vitamins and flavor.",
     price: 2.1,
-    image: createGroceryImage("Crunchy Carrots", "Vegetables", "#ffe8d8", "#f39b62")
+    image: createGroceryImage(
+      "Crunchy Carrots",
+      "Vegetables",
+      "#ffe8d8",
+      "#f39b62",
+    ),
   },
   {
     id: "curd",
@@ -77,7 +97,7 @@ const products = [
     category: "dairy",
     description: "Thick homemade-style curd for every meal.",
     price: 1.5,
-    image: createGroceryImage("Natural Curd", "Dairy", "#edf4ff", "#a4bde9")
+    image: createGroceryImage("Natural Curd", "Dairy", "#edf4ff", "#a4bde9"),
   },
   {
     id: "paneer",
@@ -85,7 +105,7 @@ const products = [
     category: "dairy",
     description: "Soft cottage cheese cubes for rich dishes.",
     price: 3.95,
-    image: createGroceryImage("Fresh Paneer", "Dairy", "#fef8e5", "#efd08c")
+    image: createGroceryImage("Fresh Paneer", "Dairy", "#fef8e5", "#efd08c"),
   },
   {
     id: "butter",
@@ -93,7 +113,7 @@ const products = [
     category: "dairy",
     description: "Salted table butter for toast and cooking.",
     price: 2.8,
-    image: createGroceryImage("Creamy Butter", "Dairy", "#fff7dc", "#f1cf72")
+    image: createGroceryImage("Creamy Butter", "Dairy", "#fff7dc", "#f1cf72"),
   },
   {
     id: "bananas",
@@ -101,7 +121,7 @@ const products = [
     category: "fruits",
     description: "Naturally sweet bananas, great for quick energy.",
     price: 1.2,
-    image: createGroceryImage("Bananas", "Fruits", "#fff4cf", "#edd06e")
+    image: createGroceryImage("Bananas", "Fruits", "#fff4cf", "#edd06e"),
   },
   {
     id: "apples",
@@ -109,8 +129,8 @@ const products = [
     category: "fruits",
     description: "Juicy apples selected for freshness and crunch.",
     price: 3.4,
-    image: createGroceryImage("Red Apples", "Fruits", "#ffe3de", "#e78d80")
-  }
+    image: createGroceryImage("Red Apples", "Fruits", "#ffe3de", "#e78d80"),
+  },
 ];
 
 const cart = new Map();
@@ -129,7 +149,7 @@ function formatCurrency(value) {
     style: "currency",
     currency: "INR",
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(value);
 }
 
@@ -163,7 +183,7 @@ function getProductImages(product) {
   return [
     base,
     createGalleryFallbackImage(product.title || "Product", "View 2"),
-    createGalleryFallbackImage(product.title || "Product", "View 3")
+    createGalleryFallbackImage(product.title || "Product", "View 3"),
   ];
 }
 
@@ -222,7 +242,14 @@ function setupAuthUi() {
   const closeSigninModal = document.getElementById("closeSigninModal");
   const googleLoginBtn = document.getElementById("googleLoginBtn");
 
-  if (!signinLink || !logoutLink || !signinModal || !closeSigninModal || !googleLoginBtn) return;
+  if (
+    !signinLink ||
+    !logoutLink ||
+    !signinModal ||
+    !closeSigninModal ||
+    !googleLoginBtn
+  )
+    return;
 
   signinModal.hidden = true;
 
@@ -273,7 +300,8 @@ function getFilteredProducts() {
   const query = catalogSearchTerm.trim().toLowerCase();
   return products.filter((product) => {
     const matchesSearch = !query || product.title.toLowerCase().includes(query);
-    const matchesFilter = catalogFilterValue === "all" || product.category === catalogFilterValue;
+    const matchesFilter =
+      catalogFilterValue === "all" || product.category === catalogFilterValue;
     return matchesSearch && matchesFilter;
   });
 }
@@ -284,36 +312,50 @@ function renderProducts() {
   if (!productGrid) return;
 
   const visibleProducts = getFilteredProducts();
-  const totalPages = Math.max(1, Math.ceil(visibleProducts.length / CATALOG_ITEMS_PER_PAGE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(visibleProducts.length / CATALOG_ITEMS_PER_PAGE),
+  );
   catalogCurrentPage = Math.min(catalogCurrentPage, totalPages);
 
   const pageStart = (catalogCurrentPage - 1) * CATALOG_ITEMS_PER_PAGE;
-  const pageItems = visibleProducts.slice(pageStart, pageStart + CATALOG_ITEMS_PER_PAGE);
+  const pageItems = visibleProducts.slice(
+    pageStart,
+    pageStart + CATALOG_ITEMS_PER_PAGE,
+  );
 
   if (visibleProducts.length === 0) {
-    productGrid.innerHTML = '<p class="cart-empty">No products found for your search.</p>';
+    productGrid.innerHTML =
+      '<p class="cart-empty">No products found for your search.</p>';
     if (catalogPagination) catalogPagination.innerHTML = "";
     return;
   }
 
-  productGrid.innerHTML = pageItems.map((product) => {
-    const qty = cart.get(product.id)?.quantity ?? 0;
-    const isShown = shownQtyControls.has(product.id);
-    const discountedPrice = Number(product.price);
-    const inferredMrp = Number((discountedPrice * 1.2).toFixed(2));
-    const mrp = Number(product.mrp ?? inferredMrp);
-    const safeMrp = mrp > discountedPrice ? mrp : Number((discountedPrice + 0.01).toFixed(2));
-    const images = getProductImages(product);
-    const totalImages = images.length;
-    const currentImageIndex = productImageIndexes.get(product.id) ?? 0;
-    const safeIndex = ((currentImageIndex % totalImages) + totalImages) % totalImages;
-    const activeImage = images[safeIndex];
-    return `
+  productGrid.innerHTML = pageItems
+    .map((product) => {
+      const qty = cart.get(product.id)?.quantity ?? 0;
+      const isShown = shownQtyControls.has(product.id);
+      const discountedPrice = Number(product.price);
+      const inferredMrp = Number((discountedPrice * 1.2).toFixed(2));
+      const mrp = Number(product.mrp ?? inferredMrp);
+      const safeMrp =
+        mrp > discountedPrice
+          ? mrp
+          : Number((discountedPrice + 0.01).toFixed(2));
+      const images = getProductImages(product);
+      const totalImages = images.length;
+      const currentImageIndex = productImageIndexes.get(product.id) ?? 0;
+      const safeIndex =
+        ((currentImageIndex % totalImages) + totalImages) % totalImages;
+      const activeImage = images[safeIndex];
+      return `
       <article class="product-card">
         <div class="product-image-wrap">
           <img src="${activeImage}" alt="${product.title}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback("Image Unavailable")}';" />
         </div>
-        ${totalImages > 1 ? `
+        ${
+          totalImages > 1
+            ? `
           <div class="img-nav-row">
             <button class="img-nav-btn" data-image-nav="prev" data-id="${product.id}" type="button" aria-label="Previous image for ${product.title}">
               <svg class="img-nav-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -327,7 +369,9 @@ function renderProducts() {
               </svg>
             </button>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
         <div class="product-content">
           <h3>${product.title}</h3>
           <p>${product.description}</p>
@@ -354,7 +398,8 @@ function renderProducts() {
         </div>
       </article>
     `;
-  }).join("");
+    })
+    .join("");
 
   productGrid.onclick = (event) => {
     const addId = event.target.dataset.add;
@@ -372,7 +417,10 @@ function renderProducts() {
 
       const current = productImageIndexes.get(imageNavId) ?? 0;
       const next = imageNav === "next" ? current + 1 : current - 1;
-      productImageIndexes.set(imageNavId, ((next % totalImages) + totalImages) % totalImages);
+      productImageIndexes.set(
+        imageNavId,
+        ((next % totalImages) + totalImages) % totalImages,
+      );
       renderProducts();
       return;
     }
@@ -380,7 +428,8 @@ function renderProducts() {
     if (step && stepId) {
       const existing = cart.get(stepId);
       const currentQty = existing?.quantity ?? 0;
-      const nextQty = step === "up" ? currentQty + 1 : Math.max(0, currentQty - 1);
+      const nextQty =
+        step === "up" ? currentQty + 1 : Math.max(0, currentQty - 1);
 
       if (nextQty === 0) {
         cart.delete(stepId);
@@ -503,17 +552,19 @@ function renderCart() {
   if (!cartList || !cartTotal) return;
 
   if (cartItems.length === 0) {
-    cartList.innerHTML = '<p class="cart-empty">Your cart is empty. Start adding groceries.</p>';
+    cartList.innerHTML =
+      '<p class="cart-empty">Your cart is empty. Start adding groceries.</p>';
     cartTotal.textContent = formatCurrency(0);
     return;
   }
 
-  cartList.innerHTML = cartItems.map((item) => {
-    const latestProduct = products.find((product) => product.id === item.id);
-    const imageSrc = latestProduct?.image ?? item.image;
-    const itemTotal = item.price * item.quantity;
+  cartList.innerHTML = cartItems
+    .map((item) => {
+      const latestProduct = products.find((product) => product.id === item.id);
+      const imageSrc = latestProduct?.image ?? item.image;
+      const itemTotal = item.price * item.quantity;
 
-    return `
+      return `
       <div class="cart-item">
         <div class="cart-item-layout">
           <img class="cart-item-image" src="${imageSrc}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback("Image Unavailable")}';" />
@@ -532,7 +583,8 @@ function renderCart() {
         </div>
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 
   cartTotal.textContent = formatCurrency(total);
 
@@ -567,7 +619,10 @@ function renderCart() {
 }
 
 function persistCart() {
-  localStorage.setItem("thriftyHomesCart", JSON.stringify(Array.from(cart.values())));
+  localStorage.setItem(
+    "thriftyHomesCart",
+    JSON.stringify(Array.from(cart.values())),
+  );
 }
 
 function restoreCart() {
@@ -589,7 +644,7 @@ function restoreCart() {
         price: latestProduct.price,
         category: latestProduct.category,
         description: latestProduct.description,
-        image: latestProduct.image
+        image: latestProduct.image,
       });
     });
   } catch (error) {
@@ -623,7 +678,10 @@ function setupSlideshow() {
   let currentIndex = 0;
 
   dotsWrap.innerHTML = slides
-    .map((_, index) => `<button class="dot ${index === 0 ? "active" : ""}" data-index="${index}" aria-label="Go to slide ${index + 1}"></button>`)
+    .map(
+      (_, index) =>
+        `<button class="dot ${index === 0 ? "active" : ""}" data-index="${index}" aria-label="Go to slide ${index + 1}"></button>`,
+    )
     .join("");
 
   const dots = Array.from(dotsWrap.querySelectorAll(".dot"));
@@ -657,7 +715,8 @@ function openMockRazorpay(amountPaise, name, onSuccess, onDismiss) {
   const modal = document.getElementById("rzpModal");
   if (!modal) return;
 
-  const fmt = (p) => "₹" + (p / 100).toLocaleString("en-IN", { minimumFractionDigits: 2 });
+  const fmt = (p) =>
+    "₹" + (p / 100).toLocaleString("en-IN", { minimumFractionDigits: 2 });
   document.getElementById("rzpAmountDisplay").textContent = fmt(amountPaise);
   document.getElementById("rzpPayAmount").textContent = fmt(amountPaise);
 
@@ -671,12 +730,20 @@ function openMockRazorpay(amountPaise, name, onSuccess, onDismiss) {
   };
 
   document.getElementById("rzpClose").onclick = close;
-  modal.addEventListener("click", (e) => { if (e.target === modal) close(); }, { once: true });
+  modal.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === modal) close();
+    },
+    { once: true },
+  );
 
   // Tab switching
   modal.querySelectorAll(".rzp-tab").forEach((tab) => {
     tab.onclick = () => {
-      modal.querySelectorAll(".rzp-tab").forEach((t) => t.classList.remove("active"));
+      modal
+        .querySelectorAll(".rzp-tab")
+        .forEach((t) => t.classList.remove("active"));
       modal.querySelectorAll(".rzp-panel").forEach((p) => (p.hidden = true));
       tab.classList.add("active");
       document.getElementById("rzp-panel-" + tab.dataset.tab).hidden = false;
@@ -723,7 +790,7 @@ function renderCheckoutPage() {
         ...item,
         image: latestProduct.image,
         title: latestProduct.title,
-        price: latestProduct.price
+        price: latestProduct.price,
       };
     });
   };
@@ -736,17 +803,19 @@ function renderCheckoutPage() {
     syncCheckoutImages();
 
     if (items.length === 0) {
-      checkoutItems.innerHTML = '<p class="cart-empty">No items in cart yet.</p>';
+      checkoutItems.innerHTML =
+        '<p class="cart-empty">No items in cart yet.</p>';
       checkoutTotal.textContent = formatCurrency(0);
       return;
     }
 
     let total = 0;
-    checkoutItems.innerHTML = items.map((item) => {
-      const lineTotal = item.quantity * item.price;
-      total += lineTotal;
+    checkoutItems.innerHTML = items
+      .map((item) => {
+        const lineTotal = item.quantity * item.price;
+        total += lineTotal;
 
-      return `
+        return `
         <div class="checkout-item">
           <div class="checkout-item-layout">
             <img class="checkout-item-image" src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback("Image Unavailable")}';" />
@@ -764,7 +833,8 @@ function renderCheckoutPage() {
           </div>
         </div>
       `;
-    }).join("");
+      })
+      .join("");
 
     checkoutTotal.textContent = formatCurrency(total);
   };
@@ -779,7 +849,8 @@ function renderCheckoutPage() {
     if (step && stepId) {
       items = items.map((item) => {
         if (item.id !== stepId) return item;
-        const nextQty = step === "up" ? item.quantity + 1 : Math.max(1, item.quantity - 1);
+        const nextQty =
+          step === "up" ? item.quantity + 1 : Math.max(1, item.quantity - 1);
         return { ...item, quantity: nextQty };
       });
 
@@ -812,9 +883,16 @@ function renderCheckoutPage() {
     const payment = formData.get("payment");
     const totalPaise = Math.max(100, Math.round(getCartTotal() * 100));
 
-    openMockRazorpay(totalPaise, name, () => finaliseOrder(name, payment), () => {
-      if (orderNote) orderNote.textContent = "Payment cancelled. Your cart is still saved.";
-    });
+    openMockRazorpay(
+      totalPaise,
+      name,
+      () => finaliseOrder(name, payment),
+      () => {
+        if (orderNote)
+          orderNote.textContent =
+            "Payment cancelled. Your cart is still saved.";
+      },
+    );
   });
 }
 
@@ -825,9 +903,24 @@ const mockOrders = [
     status: "Delivered",
     payment: "UPI",
     items: [
-      { title: "Premium Rice", quantity: 2, price: 12.99, image: createGroceryImage("Premium Rice", "Grains", "#f6edd5", "#d7be89") },
-      { title: "Farm Milk", quantity: 3, price: 1.99, image: createGroceryImage("Farm Milk", "Dairy", "#e5efff", "#9ab8ef") }
-    ]
+      {
+        title: "Premium Rice",
+        quantity: 2,
+        price: 12.99,
+        image: createGroceryImage(
+          "Premium Rice",
+          "Grains",
+          "#f6edd5",
+          "#d7be89",
+        ),
+      },
+      {
+        title: "Farm Milk",
+        quantity: 3,
+        price: 1.99,
+        image: createGroceryImage("Farm Milk", "Dairy", "#e5efff", "#9ab8ef"),
+      },
+    ],
   },
   {
     id: "ORD-20240614",
@@ -835,10 +928,40 @@ const mockOrders = [
     status: "Delivered",
     payment: "Cash on Delivery",
     items: [
-      { title: "Fresh Tomatoes", quantity: 1, price: 2.49, image: createGroceryImage("Fresh Tomatoes", "Vegetables", "#fde3df", "#ee8f85") },
-      { title: "Red Onions", quantity: 2, price: 1.70, image: createGroceryImage("Red Onions", "Vegetables", "#f4e2ee", "#ce90ba") },
-      { title: "Crunchy Carrots", quantity: 1, price: 2.10, image: createGroceryImage("Crunchy Carrots", "Vegetables", "#ffe8d8", "#f39b62") }
-    ]
+      {
+        title: "Fresh Tomatoes",
+        quantity: 1,
+        price: 2.49,
+        image: createGroceryImage(
+          "Fresh Tomatoes",
+          "Vegetables",
+          "#fde3df",
+          "#ee8f85",
+        ),
+      },
+      {
+        title: "Red Onions",
+        quantity: 2,
+        price: 1.7,
+        image: createGroceryImage(
+          "Red Onions",
+          "Vegetables",
+          "#f4e2ee",
+          "#ce90ba",
+        ),
+      },
+      {
+        title: "Crunchy Carrots",
+        quantity: 1,
+        price: 2.1,
+        image: createGroceryImage(
+          "Crunchy Carrots",
+          "Vegetables",
+          "#ffe8d8",
+          "#f39b62",
+        ),
+      },
+    ],
   },
   {
     id: "ORD-20240802",
@@ -846,10 +969,30 @@ const mockOrders = [
     status: "Delivered",
     payment: "Credit/Debit Card",
     items: [
-      { title: "Fruit Basket", quantity: 1, price: 8.75, image: createGroceryImage("Fruit Basket", "Fruits", "#fff1d8", "#f0bf6f") },
-      { title: "Bananas", quantity: 3, price: 1.20, image: createGroceryImage("Bananas", "Fruits", "#fff4cf", "#edd06e") },
-      { title: "Red Apples", quantity: 2, price: 3.40, image: createGroceryImage("Red Apples", "Fruits", "#ffe3de", "#e78d80") }
-    ]
+      {
+        title: "Fruit Basket",
+        quantity: 1,
+        price: 8.75,
+        image: createGroceryImage(
+          "Fruit Basket",
+          "Fruits",
+          "#fff1d8",
+          "#f0bf6f",
+        ),
+      },
+      {
+        title: "Bananas",
+        quantity: 3,
+        price: 1.2,
+        image: createGroceryImage("Bananas", "Fruits", "#fff4cf", "#edd06e"),
+      },
+      {
+        title: "Red Apples",
+        quantity: 2,
+        price: 3.4,
+        image: createGroceryImage("Red Apples", "Fruits", "#ffe3de", "#e78d80"),
+      },
+    ],
   },
   {
     id: "ORD-20241015",
@@ -857,10 +1000,40 @@ const mockOrders = [
     status: "Delivered",
     payment: "UPI",
     items: [
-      { title: "Fresh Paneer", quantity: 2, price: 3.95, image: createGroceryImage("Fresh Paneer", "Dairy", "#fef8e5", "#efd08c") },
-      { title: "Creamy Butter", quantity: 1, price: 2.80, image: createGroceryImage("Creamy Butter", "Dairy", "#fff7dc", "#f1cf72") },
-      { title: "Natural Curd", quantity: 2, price: 1.50, image: createGroceryImage("Natural Curd", "Dairy", "#edf4ff", "#a4bde9") }
-    ]
+      {
+        title: "Fresh Paneer",
+        quantity: 2,
+        price: 3.95,
+        image: createGroceryImage(
+          "Fresh Paneer",
+          "Dairy",
+          "#fef8e5",
+          "#efd08c",
+        ),
+      },
+      {
+        title: "Creamy Butter",
+        quantity: 1,
+        price: 2.8,
+        image: createGroceryImage(
+          "Creamy Butter",
+          "Dairy",
+          "#fff7dc",
+          "#f1cf72",
+        ),
+      },
+      {
+        title: "Natural Curd",
+        quantity: 2,
+        price: 1.5,
+        image: createGroceryImage(
+          "Natural Curd",
+          "Dairy",
+          "#edf4ff",
+          "#a4bde9",
+        ),
+      },
+    ],
   },
   {
     id: "ORD-20250112",
@@ -868,22 +1041,49 @@ const mockOrders = [
     status: "Delivered",
     payment: "Cash on Delivery",
     items: [
-      { title: "Whole Wheat Flour", quantity: 2, price: 3.25, image: createGroceryImage("Whole Wheat Flour", "Grains", "#f8ecd6", "#debd85") },
-      { title: "Brown Rice", quantity: 1, price: 4.60, image: createGroceryImage("Brown Rice", "Grains", "#efe5d7", "#c6a77c") }
-    ]
-  }
+      {
+        title: "Whole Wheat Flour",
+        quantity: 2,
+        price: 3.25,
+        image: createGroceryImage(
+          "Whole Wheat Flour",
+          "Grains",
+          "#f8ecd6",
+          "#debd85",
+        ),
+      },
+      {
+        title: "Brown Rice",
+        quantity: 1,
+        price: 4.6,
+        image: createGroceryImage("Brown Rice", "Grains", "#efe5d7", "#c6a77c"),
+      },
+    ],
+  },
 ];
 
 function renderOrdersPage() {
   const ordersList = document.getElementById("ordersList");
   if (!ordersList) return;
 
-  const statusColor = { "Delivered": "#165d46", "Pending": "#b45309", "Cancelled": "#8a3d21" };
+  const statusColor = {
+    Delivered: "#165d46",
+    Pending: "#b45309",
+    Cancelled: "#8a3d21",
+  };
 
-  ordersList.innerHTML = mockOrders.slice().reverse().map((order) => {
-    const orderTotal = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  ordersList.innerHTML = mockOrders
+    .slice()
+    .reverse()
+    .map((order) => {
+      const orderTotal = order.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
 
-    const itemsHtml = order.items.map((item) => `
+      const itemsHtml = order.items
+        .map(
+          (item) => `
       <div class="order-line-item">
         <img class="order-item-image" src="${item.image}" alt="${item.title}" loading="lazy" />
         <div class="order-item-meta">
@@ -892,9 +1092,11 @@ function renderOrdersPage() {
         </div>
         <strong class="order-item-total">${formatCurrency(item.price * item.quantity)}</strong>
       </div>
-    `).join("");
+    `,
+        )
+        .join("");
 
-    return `
+      return `
       <div class="order-card">
         <div class="order-card-header">
           <div class="order-card-meta">
@@ -913,7 +1115,8 @@ function renderOrdersPage() {
         </div>
       </div>
     `;
-  }).join("");
+    })
+    .join("");
 }
 
 function renderDashboardPage() {
@@ -932,7 +1135,9 @@ function renderDashboardPage() {
   const closeProductEditor = document.getElementById("closeProductEditor");
   const cancelProductEditor = document.getElementById("cancelProductEditor");
   const productEditorTitle = document.getElementById("productEditorTitle");
-  const productEditorSubmitBtn = document.getElementById("productEditorSubmitBtn");
+  const productEditorSubmitBtn = document.getElementById(
+    "productEditorSubmitBtn",
+  );
   const productEditorForm = document.getElementById("productEditorForm");
   const mockUploadBtn = document.getElementById("mockUploadBtn");
   const mockUploadFileName = document.getElementById("mockUploadFileName");
@@ -945,58 +1150,95 @@ function renderDashboardPage() {
   const cancelUserRoleEditor = document.getElementById("cancelUserRoleEditor");
   const userRoleEditorForm = document.getElementById("userRoleEditorForm");
   const stockistDealerModal = document.getElementById("stockistDealerModal");
-  const closeStockistDealerModal = document.getElementById("closeStockistDealerModal");
-  const cancelStockistDealerModal = document.getElementById("cancelStockistDealerModal");
+  const closeStockistDealerModal = document.getElementById(
+    "closeStockistDealerModal",
+  );
+  const cancelStockistDealerModal = document.getElementById(
+    "cancelStockistDealerModal",
+  );
   const stockistDealerForm = document.getElementById("stockistDealerForm");
   const dealerInviteModal = document.getElementById("dealerInviteModal");
-  const closeDealerInviteModal = document.getElementById("closeDealerInviteModal");
-  const cancelDealerInviteModal = document.getElementById("cancelDealerInviteModal");
+  const closeDealerInviteModal = document.getElementById(
+    "closeDealerInviteModal",
+  );
+  const cancelDealerInviteModal = document.getElementById(
+    "cancelDealerInviteModal",
+  );
   const dealerInviteForm = document.getElementById("dealerInviteForm");
-  const dispatchCompleteModal = document.getElementById("dispatchCompleteModal");
-  const closeDispatchCompleteModal = document.getElementById("closeDispatchCompleteModal");
-  const cancelDispatchCompleteModal = document.getElementById("cancelDispatchCompleteModal");
+  const dispatchCompleteModal = document.getElementById(
+    "dispatchCompleteModal",
+  );
+  const closeDispatchCompleteModal = document.getElementById(
+    "closeDispatchCompleteModal",
+  );
+  const cancelDispatchCompleteModal = document.getElementById(
+    "cancelDispatchCompleteModal",
+  );
   const dispatchCompleteForm = document.getElementById("dispatchCompleteForm");
   const dispatchStatusSelect = document.getElementById("dispatchStatus");
   const dispatchDateTimeRow = document.getElementById("dispatchDateTimeRow");
   const deleteConfirmModal = document.getElementById("deleteConfirmModal");
-  const closeDeleteConfirmModal = document.getElementById("closeDeleteConfirmModal");
-  const cancelDeleteConfirmModal = document.getElementById("cancelDeleteConfirmModal");
-  const confirmDeleteConfirmModal = document.getElementById("confirmDeleteConfirmModal");
+  const closeDeleteConfirmModal = document.getElementById(
+    "closeDeleteConfirmModal",
+  );
+  const cancelDeleteConfirmModal = document.getElementById(
+    "cancelDeleteConfirmModal",
+  );
+  const confirmDeleteConfirmModal = document.getElementById(
+    "confirmDeleteConfirmModal",
+  );
   const deleteConfirmTitle = document.getElementById("deleteConfirmTitle");
   const deleteConfirmMessage = document.getElementById("deleteConfirmMessage");
   const orderUpdateModal = document.getElementById("orderUpdateModal");
-  const closeOrderUpdateModal = document.getElementById("closeOrderUpdateModal");
-  const cancelOrderUpdateModal = document.getElementById("cancelOrderUpdateModal");
+  const closeOrderUpdateModal = document.getElementById(
+    "closeOrderUpdateModal",
+  );
+  const cancelOrderUpdateModal = document.getElementById(
+    "cancelOrderUpdateModal",
+  );
   const orderUpdateForm = document.getElementById("orderUpdateForm");
 
-  if (!sidebarTitle || !sidebarMenu || !contentTitle || !contentCopy || !contentBody || !primaryActionBtn) return;
+  if (
+    !sidebarTitle ||
+    !sidebarMenu ||
+    !contentTitle ||
+    !contentCopy ||
+    !contentBody ||
+    !primaryActionBtn
+  )
+    return;
 
   const roleReferenceIds = {
     superstockist: "SS-REF-317",
     stockist: "ST-REF-317",
-    dealer: "DL-REF-317"
+    dealer: "DL-REF-317",
   };
 
   const roleMenuItems = {
-    admin: ["Manage Product Catalog", "User Management", "View Orders", "Earnings Summary"],
-    superstockist: ["Invite Stockist or Dealers", "View Orders", "Earnings Summary"],
+    admin: [
+      "Manage Product Catalog",
+      "User Management",
+      "View Orders",
+      "Earnings Summary",
+    ],
+    superstockist: [
+      "Invite Stockist or Dealers",
+      "View Orders",
+      "Earnings Summary",
+    ],
     stockist: ["Invite Dealer", "View Orders", "Earnings Summary"],
-    dealer: ["View Orders", "Earnings Summary"]
+    dealer: ["View Orders", "Earnings Summary"],
   };
 
   const roleLabel = {
     admin: "Admin",
     superstockist: "Superstockist",
     stockist: "Stockist",
-    dealer: "Dealer"
-  };
-
-  const roleDefaultMenuItems = {
-    admin: "Earnings Summary"
+    dealer: "Dealer",
   };
 
   let activeRole = "admin";
-  let activeMenuItem = "Earnings Summary";
+  let activeMenuItem = "Manage Product Catalog";
   let editingProductId = null;
   let editingUserId = null;
   let userMgmtSearchTerm = "";
@@ -1021,7 +1263,7 @@ function renderDashboardPage() {
       lastName: "Sharma",
       email: "aarav.sharma@gmail.com",
       role: "Admin",
-      referenceNumber: "REF-ADM-001"
+      referenceNumber: "REF-ADM-001",
     },
     {
       id: "usr-2",
@@ -1031,7 +1273,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "REF-SS-102",
       serviceAreaPincode: "560001",
-      commission: 8
+      commission: 8,
     },
     {
       id: "usr-8",
@@ -1041,7 +1283,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "REF-SS-214",
       serviceAreaPincode: "500081",
-      commission: 7
+      commission: 7,
     },
     {
       id: "usr-10",
@@ -1051,7 +1293,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "SS-REF-317",
       serviceAreaPincode: "400001",
-      commission: 8
+      commission: 8,
     },
     {
       id: "usr-11",
@@ -1061,7 +1303,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "SS-REF-402",
       serviceAreaPincode: "411014",
-      commission: 7
+      commission: 7,
     },
     {
       id: "usr-12",
@@ -1071,7 +1313,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "SS-REF-418",
       serviceAreaPincode: "700091",
-      commission: 9
+      commission: 9,
     },
     {
       id: "usr-9",
@@ -1081,7 +1323,7 @@ function renderDashboardPage() {
       role: "Superstockist",
       referenceNumber: "REF-SS-325",
       serviceAreaPincode: "600028",
-      commission: 9
+      commission: 9,
     },
     {
       id: "usr-3",
@@ -1090,7 +1332,7 @@ function renderDashboardPage() {
       email: "rohan.patel@gmail.com",
       role: "Stockist",
       referenceNumber: "REF-ST-213",
-      commission: 5
+      commission: 5,
     },
     {
       id: "usr-7",
@@ -1099,7 +1341,7 @@ function renderDashboardPage() {
       email: "karan.mehta@gmail.com",
       role: "Dealer",
       referenceNumber: "REF-DL-701",
-      commission: 3
+      commission: 3,
     },
     {
       id: "usr-5",
@@ -1107,8 +1349,8 @@ function renderDashboardPage() {
       lastName: "Kumar",
       email: "ishaan.kumar@gmail.com",
       role: "Customer",
-      referenceNumber: "REF-CUS-517"
-    }
+      referenceNumber: "REF-CUS-517",
+    },
   ];
   let mockStockistDealerUsers = [
     {
@@ -1118,7 +1360,7 @@ function renderDashboardPage() {
       email: "vikram.jain@gmail.com",
       type: "stockist",
       stockistReferenceId: "ST-REF-550",
-      dealerReferenceId: "-"
+      dealerReferenceId: "-",
     },
     {
       id: "sd-2",
@@ -1127,7 +1369,7 @@ function renderDashboardPage() {
       email: "meera.kapoor@gmail.com",
       type: "dealer",
       stockistReferenceId: "-",
-      dealerReferenceId: "DL-REF-812"
+      dealerReferenceId: "DL-REF-812",
     },
     {
       id: "sd-3",
@@ -1136,8 +1378,8 @@ function renderDashboardPage() {
       email: "suresh.yadav@gmail.com",
       type: "stockist",
       stockistReferenceId: "ST-REF-903",
-      dealerReferenceId: "-"
-    }
+      dealerReferenceId: "-",
+    },
   ];
   let mockDealerUsers = [
     {
@@ -1146,7 +1388,7 @@ function renderDashboardPage() {
       lastName: "Malhotra",
       email: "nitin.malhotra@gmail.com",
       stockistReferenceId: "ST-REF-903",
-      dealerReferenceId: "DL-REF-221"
+      dealerReferenceId: "DL-REF-221",
     },
     {
       id: "dl-2",
@@ -1154,8 +1396,8 @@ function renderDashboardPage() {
       lastName: "Kulkarni",
       email: "pooja.kulkarni@gmail.com",
       stockistReferenceId: "ST-REF-903",
-      dealerReferenceId: "DL-REF-336"
-    }
+      dealerReferenceId: "DL-REF-336",
+    },
   ];
   let mockDashboardOrders = [
     {
@@ -1164,7 +1406,7 @@ function renderDashboardPage() {
       referenceIds: {
         superstockistId: "NA",
         stockistId: "NA",
-        dealerId: "NA"
+        dealerId: "NA",
       },
       orderDate: "01 Mar 2025",
       status: "Delivered",
@@ -1174,21 +1416,21 @@ function renderDashboardPage() {
         lastName: "Verma",
         email: "rahul.verma@gmail.com",
         phone: "+91 98765 43210",
-        address: "22, Green Park, Mumbai"
+        address: "22, Green Park, Mumbai",
       },
       itemCount: 7,
       dispatch: {
         status: "pending",
         completedAt: "",
-        comments: ""
-      }
+        comments: "",
+      },
     },
     {
       id: "ORD-250317",
       referenceIds: {
         superstockistId: "SS-REF-317",
         stockistId: "ST-REF-317",
-        dealerId: "DL-REF-317"
+        dealerId: "DL-REF-317",
       },
       orderDate: "17 Mar 2025",
       status: "Processing",
@@ -1198,21 +1440,21 @@ function renderDashboardPage() {
         lastName: "Iyer",
         email: "sneha.iyer@gmail.com",
         phone: "+91 99887 77665",
-        address: "12, Lake View Road, Bengaluru"
+        address: "12, Lake View Road, Bengaluru",
       },
       itemCount: 4,
       dispatch: {
         status: "pending",
         completedAt: "",
-        comments: ""
-      }
+        comments: "",
+      },
     },
     {
       id: "ORD-250402",
       referenceIds: {
         superstockistId: "SS-REF-402",
         stockistId: "ST-REF-402",
-        dealerId: "DL-REF-402"
+        dealerId: "DL-REF-402",
       },
       orderDate: "02 Apr 2025",
       status: "Delivered",
@@ -1222,21 +1464,21 @@ function renderDashboardPage() {
         lastName: "Mehta",
         email: "arjun.mehta@gmail.com",
         phone: "+91 90909 81818",
-        address: "45, Sunrise Colony, Pune"
+        address: "45, Sunrise Colony, Pune",
       },
       itemCount: 11,
       dispatch: {
         status: "pending",
         completedAt: "",
-        comments: ""
-      }
+        comments: "",
+      },
     },
     {
       id: "ORD-250418",
       referenceIds: {
         superstockistId: "SS-REF-418",
         stockistId: "ST-REF-418",
-        dealerId: "DL-REF-418"
+        dealerId: "DL-REF-418",
       },
       orderDate: "18 Apr 2025",
       status: "Packed",
@@ -1246,21 +1488,21 @@ function renderDashboardPage() {
         lastName: "Nanda",
         email: "kavya.nanda@gmail.com",
         phone: "+91 98111 22334",
-        address: "9, Heritage Block, Hyderabad"
+        address: "9, Heritage Block, Hyderabad",
       },
       itemCount: 5,
       dispatch: {
         status: "pending",
         completedAt: "",
-        comments: ""
-      }
+        comments: "",
+      },
     },
     {
       id: "ORD-250429",
       referenceIds: {
         superstockistId: "SS-REF-317",
         stockistId: "ST-REF-903",
-        dealerId: "DL-REF-903"
+        dealerId: "DL-REF-903",
       },
       orderDate: "29 Apr 2025",
       status: "Shipped",
@@ -1270,21 +1512,21 @@ function renderDashboardPage() {
         lastName: "Rao",
         email: "diya.rao@gmail.com",
         phone: "+91 91234 55667",
-        address: "88, Palm Street, Chennai"
+        address: "88, Palm Street, Chennai",
       },
       itemCount: 6,
       dispatch: {
         status: "dispatched",
         completedAt: "2025-04-30T11:15",
-        comments: "Left warehouse after quality check"
-      }
-    }
+        comments: "Left warehouse after quality check",
+      },
+    },
   ];
 
   const fallbackCommissionByRole = {
     Superstockist: 8,
     Stockist: 5,
-    Dealer: 3
+    Dealer: 3,
   };
 
   const monthIndexMap = {
@@ -1299,7 +1541,7 @@ function renderDashboardPage() {
     Sep: 8,
     Oct: 9,
     Nov: 10,
-    Dec: 11
+    Dec: 11,
   };
 
   const parseDashboardOrderDate = (value) => {
@@ -1310,7 +1552,8 @@ function renderDashboardPage() {
     const day = Number(dayText);
     const month = monthIndexMap[monthText];
     const year = Number(yearText);
-    if (Number.isNaN(day) || Number.isNaN(year) || typeof month !== "number") return null;
+    if (Number.isNaN(day) || Number.isNaN(year) || typeof month !== "number")
+      return null;
     return new Date(year, month, day);
   };
 
@@ -1324,18 +1567,22 @@ function renderDashboardPage() {
 
   const getIsoWeekValue = (date) => {
     if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
-    const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const target = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+    );
     const day = target.getUTCDay() || 7;
     target.setUTCDate(target.getUTCDate() + 4 - day);
     const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-    const weekNo = Math.ceil((((target - yearStart) / 86400000) + 1) / 7);
+    const weekNo = Math.ceil(((target - yearStart) / 86400000 + 1) / 7);
     return `${target.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
   };
 
   const getCommissionRateForRole = (role, referenceId) => {
     if (!referenceId || referenceId === "NA") return 0;
     if (role === "Superstockist") {
-      const matchedUser = mockUsers.find((user) => user.role === role && user.referenceNumber === referenceId);
+      const matchedUser = mockUsers.find(
+        (user) => user.role === role && user.referenceNumber === referenceId,
+      );
       return matchedUser?.commission ?? fallbackCommissionByRole[role];
     }
     return fallbackCommissionByRole[role] ?? 0;
@@ -1343,19 +1590,30 @@ function renderDashboardPage() {
 
   const getOrderEarningsBreakdown = (order) => {
     const total = Number(order.total ?? 0);
-    const ssRate = getCommissionRateForRole("Superstockist", order.referenceIds?.superstockistId);
-    const stockistRate = getCommissionRateForRole("Stockist", order.referenceIds?.stockistId);
-    const dealerRate = getCommissionRateForRole("Dealer", order.referenceIds?.dealerId);
-    const superstockistAmount = Number((total * ssRate / 100).toFixed(2));
-    const stockistAmount = Number((total * stockistRate / 100).toFixed(2));
-    const dealerAmount = Number((total * dealerRate / 100).toFixed(2));
-    const adminAmount = Number((total - superstockistAmount - stockistAmount - dealerAmount).toFixed(2));
+    const ssRate = getCommissionRateForRole(
+      "Superstockist",
+      order.referenceIds?.superstockistId,
+    );
+    const stockistRate = getCommissionRateForRole(
+      "Stockist",
+      order.referenceIds?.stockistId,
+    );
+    const dealerRate = getCommissionRateForRole(
+      "Dealer",
+      order.referenceIds?.dealerId,
+    );
+    const superstockistAmount = Number(((total * ssRate) / 100).toFixed(2));
+    const stockistAmount = Number(((total * stockistRate) / 100).toFixed(2));
+    const dealerAmount = Number(((total * dealerRate) / 100).toFixed(2));
+    const adminAmount = Number(
+      (total - superstockistAmount - stockistAmount - dealerAmount).toFixed(2),
+    );
 
     return {
       admin: { amount: adminAmount },
       superstockist: { rate: ssRate, amount: superstockistAmount },
       stockist: { rate: stockistRate, amount: stockistAmount },
-      dealer: { rate: dealerRate, amount: dealerAmount }
+      dealer: { rate: dealerRate, amount: dealerAmount },
     };
   };
 
@@ -1365,19 +1623,31 @@ function renderDashboardPage() {
       if (!orderDate) return false;
 
       if (analyticsPeriodType === "date") {
-        return !analyticsDateValue || formatDateInputValue(orderDate) === analyticsDateValue;
+        return (
+          !analyticsDateValue ||
+          formatDateInputValue(orderDate) === analyticsDateValue
+        );
       }
 
       if (analyticsPeriodType === "week") {
-        return !analyticsWeekValue || getIsoWeekValue(orderDate) === analyticsWeekValue;
+        return (
+          !analyticsWeekValue ||
+          getIsoWeekValue(orderDate) === analyticsWeekValue
+        );
       }
 
       if (analyticsPeriodType === "month") {
-        return !analyticsMonthValue || formatDateInputValue(orderDate).slice(0, 7) === analyticsMonthValue;
+        return (
+          !analyticsMonthValue ||
+          formatDateInputValue(orderDate).slice(0, 7) === analyticsMonthValue
+        );
       }
 
       if (analyticsPeriodType === "year") {
-        return !analyticsYearValue || String(orderDate.getFullYear()) === analyticsYearValue;
+        return (
+          !analyticsYearValue ||
+          String(orderDate.getFullYear()) === analyticsYearValue
+        );
       }
 
       return true;
@@ -1387,19 +1657,32 @@ function renderDashboardPage() {
   const renderAnalyticsPanel = (role) => {
     primaryActionBtn.hidden = true;
 
-    const analyticsOrders = role === "admin"
-      ? mockDashboardOrders
-      : mockDashboardOrders.filter((order) => {
-          if (role === "superstockist") return order.referenceIds?.superstockistId === roleReferenceIds.superstockist;
-          if (role === "stockist") return order.referenceIds?.stockistId === roleReferenceIds.stockist;
-          return order.referenceIds?.dealerId === roleReferenceIds.dealer;
-        });
+    const analyticsOrders =
+      role === "admin"
+        ? mockDashboardOrders
+        : mockDashboardOrders.filter((order) => {
+            if (role === "superstockist")
+              return (
+                order.referenceIds?.superstockistId ===
+                roleReferenceIds.superstockist
+              );
+            if (role === "stockist")
+              return (
+                order.referenceIds?.stockistId === roleReferenceIds.stockist
+              );
+            return order.referenceIds?.dealerId === roleReferenceIds.dealer;
+          });
 
     const visibleOrders = getFilteredAnalyticsOrders(analyticsOrders);
-    const availableYears = Array.from(new Set(analyticsOrders
-      .map((order) => parseDashboardOrderDate(order.orderDate)?.getFullYear())
-      .filter(Boolean)))
-      .sort((left, right) => right - left);
+    const availableYears = Array.from(
+      new Set(
+        analyticsOrders
+          .map((order) =>
+            parseDashboardOrderDate(order.orderDate)?.getFullYear(),
+          )
+          .filter(Boolean),
+      ),
+    ).sort((left, right) => right - left);
 
     let periodInputHtml = "";
     if (analyticsPeriodType === "date") {
@@ -1420,24 +1703,34 @@ function renderDashboardPage() {
       `;
     }
 
-    const orderBreakdowns = visibleOrders.map((order) => ({ order, earnings: getOrderEarningsBreakdown(order) }));
-    const maxRoleAmount = Math.max(1, ...orderBreakdowns.map(({ earnings }) => {
-      if (role === "superstockist") return earnings.superstockist.amount;
-      if (role === "stockist") return earnings.stockist.amount;
-      return earnings.dealer.amount;
+    const orderBreakdowns = visibleOrders.map((order) => ({
+      order,
+      earnings: getOrderEarningsBreakdown(order),
     }));
+    const maxRoleAmount = Math.max(
+      1,
+      ...orderBreakdowns.map(({ earnings }) => {
+        if (role === "superstockist") return earnings.superstockist.amount;
+        if (role === "stockist") return earnings.stockist.amount;
+        return earnings.dealer.amount;
+      }),
+    );
 
-    const totals = orderBreakdowns.reduce((summary, { earnings }) => {
-      summary.admin += earnings.admin.amount;
-      summary.superstockist += earnings.superstockist.amount;
-      summary.stockist += earnings.stockist.amount;
-      summary.dealer += earnings.dealer.amount;
-      return summary;
-    }, { admin: 0, superstockist: 0, stockist: 0, dealer: 0 });
+    const totals = orderBreakdowns.reduce(
+      (summary, { earnings }) => {
+        summary.admin += earnings.admin.amount;
+        summary.superstockist += earnings.superstockist.amount;
+        summary.stockist += earnings.stockist.amount;
+        summary.dealer += earnings.dealer.amount;
+        return summary;
+      },
+      { admin: 0, superstockist: 0, stockist: 0, dealer: 0 },
+    );
 
     const roleTitle = roleLabel[role] ?? "Role";
-    const roleCardsHtml = role === "admin"
-      ? `
+    const roleCardsHtml =
+      role === "admin"
+        ? `
         <div class="analytics-summary-grid">
           <article class="analytics-summary-card"><span>Admin Earnings</span><strong>${formatCurrency(totals.admin)}</strong></article>
           <article class="analytics-summary-card"><span>Superstockist Earnings</span><strong>${formatCurrency(totals.superstockist)}</strong></article>
@@ -1446,22 +1739,25 @@ function renderDashboardPage() {
           <article class="analytics-summary-card"><span>Orders Count</span><strong>${visibleOrders.length}</strong></article>
         </div>
       `
-      : (() => {
-          const roleKey = role === "superstockist" ? "superstockist" : role;
-          const totalAmount = totals[roleKey];
-          const averageAmount = visibleOrders.length ? totalAmount / visibleOrders.length : 0;
-          return `
+        : (() => {
+            const roleKey = role === "superstockist" ? "superstockist" : role;
+            const totalAmount = totals[roleKey];
+            const averageAmount = visibleOrders.length
+              ? totalAmount / visibleOrders.length
+              : 0;
+            return `
             <div class="analytics-summary-grid analytics-summary-grid-compact">
               <article class="analytics-summary-card"><span>${roleTitle} Earnings</span><strong>${formatCurrency(totalAmount)}</strong></article>
               <article class="analytics-summary-card"><span>Orders Count</span><strong>${visibleOrders.length}</strong></article>
               <article class="analytics-summary-card"><span>Average / Order</span><strong>${formatCurrency(averageAmount)}</strong></article>
             </div>
           `;
-        })();
+          })();
 
-    const adminRowsHtml = orderBreakdowns.map(({ order, earnings }) => {
-      const orderTotal = Math.max(1, Number(order.total ?? 0));
-      return `
+    const adminRowsHtml = orderBreakdowns
+      .map(({ order, earnings }) => {
+        const orderTotal = Math.max(1, Number(order.total ?? 0));
+        return `
       <article class="analytics-order-card">
         <div class="analytics-order-head">
           <div>
@@ -1494,15 +1790,18 @@ function renderDashboardPage() {
         </div>
       </article>
     `;
-    }).join("");
+      })
+      .join("");
 
-    const roleRowsHtml = role === "admin"
-      ? ""
-      : orderBreakdowns.map(({ order, earnings }) => {
-          const roleKey = role === "superstockist" ? "superstockist" : role;
-          const amount = earnings[roleKey].amount;
-          const rate = earnings[roleKey].rate;
-          return `
+    const roleRowsHtml =
+      role === "admin"
+        ? ""
+        : orderBreakdowns
+            .map(({ order, earnings }) => {
+              const roleKey = role === "superstockist" ? "superstockist" : role;
+              const amount = earnings[roleKey].amount;
+              const rate = earnings[roleKey].rate;
+              return `
             <article class="analytics-order-card">
               <div class="analytics-order-head">
                 <div>
@@ -1521,7 +1820,8 @@ function renderDashboardPage() {
               </div>
             </article>
           `;
-        }).join("");
+            })
+            .join("");
 
     contentBody.innerHTML = `
       <div class="dashboard-catalog-controls analytics-controls">
@@ -1539,11 +1839,13 @@ function renderDashboardPage() {
       </div>
       ${roleCardsHtml}
       <section class="analytics-orders-wrap">
-        ${visibleOrders.length === 0 ? '<p class="dashboard-placeholder">No earnings found for the selected period.</p>' : (role === "admin" ? adminRowsHtml : roleRowsHtml)}
+        ${visibleOrders.length === 0 ? '<p class="dashboard-placeholder">No earnings found for the selected period.</p>' : role === "admin" ? adminRowsHtml : roleRowsHtml}
       </section>
     `;
 
-    const analyticsPeriodTypeInput = document.getElementById("analyticsPeriodType");
+    const analyticsPeriodTypeInput = document.getElementById(
+      "analyticsPeriodType",
+    );
     const analyticsDateInput = document.getElementById("analyticsDateInput");
     const analyticsWeekInput = document.getElementById("analyticsWeekInput");
     const analyticsMonthInput = document.getElementById("analyticsMonthInput");
@@ -1639,13 +1941,14 @@ function renderDashboardPage() {
       Superstockist: ["Superstockist"],
       Stockist: ["Stockist", "Superstockist"],
       Dealer: ["Dealer", "Stockist"],
-      Customer: ["Customer", "Dealer"]
+      Customer: ["Customer", "Dealer"],
     };
 
     const toggleCommissionRow = (role) => {
       if (!commissionRow) return;
       commissionRow.hidden = !commissionRoles.includes(role);
-      if (commissionInput) commissionInput.required = commissionRoles.includes(role);
+      if (commissionInput)
+        commissionInput.required = commissionRoles.includes(role);
     };
 
     const togglePincodeRow = (role) => {
@@ -1656,9 +1959,14 @@ function renderDashboardPage() {
 
     if (userIdInput) userIdInput.value = userId;
     if (roleInput) {
-      const allowedRoles = upgradeRoleOptions[matchedUser.role] ?? [matchedUser.role];
+      const allowedRoles = upgradeRoleOptions[matchedUser.role] ?? [
+        matchedUser.role,
+      ];
       roleInput.innerHTML = allowedRoles
-        .map((roleOption) => `<option value="${roleOption}">${roleOption}</option>`)
+        .map(
+          (roleOption) =>
+            `<option value="${roleOption}">${roleOption}</option>`,
+        )
         .join("");
       roleInput.value = matchedUser.role;
       roleInput.disabled = false;
@@ -1669,7 +1977,8 @@ function renderDashboardPage() {
     }
     if (commissionInput) commissionInput.value = matchedUser.commission ?? "";
     if (pincodeInput) pincodeInput.value = matchedUser.serviceAreaPincode ?? "";
-    if (userName) userName.textContent = `${matchedUser.firstName} ${matchedUser.lastName} (${matchedUser.email})`;
+    if (userName)
+      userName.textContent = `${matchedUser.firstName} ${matchedUser.lastName} (${matchedUser.email})`;
 
     const initialRole = roleInput?.value || matchedUser.role;
     toggleCommissionRow(initialRole);
@@ -1711,7 +2020,9 @@ function renderDashboardPage() {
 
   const openOrderUpdateFormModal = (orderId) => {
     if (!orderUpdateModal || !orderUpdateForm || !orderId) return;
-    const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+    const matchedOrder = mockDashboardOrders.find(
+      (order) => order.id === orderId,
+    );
     if (!matchedOrder) return;
 
     const orderIdInput = document.getElementById("orderUpdateOrderId");
@@ -1720,23 +2031,41 @@ function renderDashboardPage() {
     const currentSsRow = document.getElementById("orderUpdateCurrentSsRow");
     const currentSsValue = document.getElementById("orderUpdateCurrentSs");
     const selectLabel = document.getElementById("orderUpdateSelectLabel");
-    const superstockistSelect = document.getElementById("orderUpdateSuperstockistSelect");
+    const superstockistSelect = document.getElementById(
+      "orderUpdateSuperstockistSelect",
+    );
 
-    if (!orderIdInput || !modalTitle || !modalCopy || !currentSsRow || !currentSsValue || !selectLabel || !superstockistSelect) return;
+    if (
+      !orderIdInput ||
+      !modalTitle ||
+      !modalCopy ||
+      !currentSsRow ||
+      !currentSsValue ||
+      !selectLabel ||
+      !superstockistSelect
+    )
+      return;
 
-    const superstockistUsers = mockUsers.filter((user) => user.role === "Superstockist");
+    const superstockistUsers = mockUsers.filter(
+      (user) => user.role === "Superstockist",
+    );
     const currentRef = matchedOrder.referenceIds?.superstockistId ?? "NA";
     const isGuestOrder = Boolean(matchedOrder.isGuest);
     const hasAssignedSuperstockist = currentRef !== "NA";
-    const isGuestOrderNeedingAssignment = isGuestOrder && !hasAssignedSuperstockist;
+    const isGuestOrderNeedingAssignment =
+      isGuestOrder && !hasAssignedSuperstockist;
 
     if (orderIdInput) orderIdInput.value = matchedOrder.id;
 
-    modalTitle.textContent = isGuestOrderNeedingAssignment ? "Assign Superstockist" : "Modify Superstockist";
+    modalTitle.textContent = isGuestOrderNeedingAssignment
+      ? "Assign Superstockist"
+      : "Modify Superstockist";
     modalCopy.textContent = isGuestOrderNeedingAssignment
       ? "Select a Superstockist for this guest order."
       : "Modify the Superstockist assignment for this order.";
-    selectLabel.textContent = isGuestOrderNeedingAssignment ? "Assign Superstockist" : "Modify Superstockist";
+    selectLabel.textContent = isGuestOrderNeedingAssignment
+      ? "Assign Superstockist"
+      : "Modify Superstockist";
 
     currentSsRow.hidden = isGuestOrderNeedingAssignment;
     currentSsValue.textContent = currentRef;
@@ -1750,11 +2079,14 @@ function renderDashboardPage() {
       .join("");
 
     if (superstockistUsers.length === 0) {
-      superstockistSelect.innerHTML = '<option value="">No superstockist available</option>';
+      superstockistSelect.innerHTML =
+        '<option value="">No superstockist available</option>';
       superstockistSelect.disabled = true;
     } else {
       superstockistSelect.disabled = false;
-      if (superstockistUsers.some((user) => user.referenceNumber === currentRef)) {
+      if (
+        superstockistUsers.some((user) => user.referenceNumber === currentRef)
+      ) {
         superstockistSelect.value = currentRef;
       }
     }
@@ -1763,7 +2095,8 @@ function renderDashboardPage() {
   };
 
   const openDeleteModal = (title, message, onConfirm) => {
-    if (!deleteConfirmModal || !deleteConfirmTitle || !deleteConfirmMessage) return;
+    if (!deleteConfirmModal || !deleteConfirmTitle || !deleteConfirmMessage)
+      return;
     pendingDeleteAction = onConfirm;
     deleteConfirmTitle.textContent = title;
     deleteConfirmMessage.textContent = message;
@@ -1778,7 +2111,9 @@ function renderDashboardPage() {
   };
 
   const toggleDispatchDateTimeField = (dispatchStatus) => {
-    const dispatchDateTimeInput = document.getElementById("dispatchCompletedAt");
+    const dispatchDateTimeInput = document.getElementById(
+      "dispatchCompletedAt",
+    );
     if (!dispatchDateTimeRow || !dispatchDateTimeInput) return;
 
     const shouldShow = dispatchStatus === "dispatched";
@@ -1788,16 +2123,23 @@ function renderDashboardPage() {
 
   const openDispatchCompleteFormModal = (orderId) => {
     if (!dispatchCompleteModal || !dispatchCompleteForm || !orderId) return;
-    const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+    const matchedOrder = mockDashboardOrders.find(
+      (order) => order.id === orderId,
+    );
     dispatchCompleteForm.reset();
 
     const orderIdInput = document.getElementById("dispatchOrderId");
-    const dispatchDateTimeInput = document.getElementById("dispatchCompletedAt");
+    const dispatchDateTimeInput = document.getElementById(
+      "dispatchCompletedAt",
+    );
     const dispatchCommentsInput = document.getElementById("dispatchComments");
     if (orderIdInput) {
       orderIdInput.value = orderId;
     }
-    const statusValue = matchedOrder?.dispatch?.status === "cancelled" ? "cancelled" : "dispatched";
+    const statusValue =
+      matchedOrder?.dispatch?.status === "cancelled"
+        ? "cancelled"
+        : "dispatched";
     if (dispatchStatusSelect) {
       dispatchStatusSelect.value = statusValue;
     }
@@ -1805,7 +2147,8 @@ function renderDashboardPage() {
       dispatchCommentsInput.value = matchedOrder?.dispatch?.comments ?? "";
     }
     if (dispatchDateTimeInput) {
-      dispatchDateTimeInput.value = matchedOrder?.dispatch?.completedAt || getCurrentDateTimeLocalValue();
+      dispatchDateTimeInput.value =
+        matchedOrder?.dispatch?.completedAt || getCurrentDateTimeLocalValue();
     }
 
     toggleDispatchDateTimeField(statusValue);
@@ -1820,24 +2163,40 @@ function renderDashboardPage() {
   };
 
   const openEditorModal = (product = null) => {
-    if (!productEditorModal || !productEditorForm || !productEditorTitle) return;
+    if (!productEditorModal || !productEditorForm || !productEditorTitle)
+      return;
 
     editingProductId = product?.id ?? null;
     const isUpdateMode = Boolean(product);
-    productEditorTitle.textContent = isUpdateMode ? "Update Product" : "Add Product";
+    productEditorTitle.textContent = isUpdateMode
+      ? "Update Product"
+      : "Add Product";
     if (productEditorSubmitBtn) {
-      productEditorSubmitBtn.textContent = isUpdateMode ? "Update Product" : "Add Product";
+      productEditorSubmitBtn.textContent = isUpdateMode
+        ? "Update Product"
+        : "Add Product";
     }
 
     const titleInput = document.getElementById("editorTitle");
     const categoryInput = document.getElementById("editorCategory");
     const descriptionInput = document.getElementById("editorDescription");
     const mrpInput = document.getElementById("editorMrp");
-    const discountedPriceInput = document.getElementById("editorDiscountedPrice");
+    const discountedPriceInput = document.getElementById(
+      "editorDiscountedPrice",
+    );
     const stockCountInput = document.getElementById("editorStockCount");
     const imageInput = document.getElementById("editorImage");
 
-    if (!titleInput || !categoryInput || !descriptionInput || !mrpInput || !discountedPriceInput || !stockCountInput || !imageInput) return;
+    if (
+      !titleInput ||
+      !categoryInput ||
+      !descriptionInput ||
+      !mrpInput ||
+      !discountedPriceInput ||
+      !stockCountInput ||
+      !imageInput
+    )
+      return;
 
     titleInput.value = product?.title ?? "";
     categoryInput.value = product?.category ?? "grains";
@@ -1860,16 +2219,25 @@ function renderDashboardPage() {
   const renderCatalogProducts = () => {
     const query = adminCatalogSearchTerm.trim().toLowerCase();
     const filteredProducts = products.filter((product) => {
-      const matchesSearch = !query || product.title.toLowerCase().includes(query);
-      const matchesFilter = adminCatalogFilterValue === "all" || product.category === adminCatalogFilterValue;
+      const matchesSearch =
+        !query || product.title.toLowerCase().includes(query);
+      const matchesFilter =
+        adminCatalogFilterValue === "all" ||
+        product.category === adminCatalogFilterValue;
       return matchesSearch && matchesFilter;
     });
 
-    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ADMIN_CATALOG_ITEMS_PER_PAGE));
+    const totalPages = Math.max(
+      1,
+      Math.ceil(filteredProducts.length / ADMIN_CATALOG_ITEMS_PER_PAGE),
+    );
     adminCatalogPage = Math.min(adminCatalogPage, totalPages);
 
     const pageStart = (adminCatalogPage - 1) * ADMIN_CATALOG_ITEMS_PER_PAGE;
-    const pageItems = filteredProducts.slice(pageStart, pageStart + ADMIN_CATALOG_ITEMS_PER_PAGE);
+    const pageItems = filteredProducts.slice(
+      pageStart,
+      pageStart + ADMIN_CATALOG_ITEMS_PER_PAGE,
+    );
 
     contentBody.innerHTML = `
       <div class="dashboard-catalog-controls">
@@ -1914,20 +2282,24 @@ function renderDashboardPage() {
                   </button>
                 </div>
               </article>
-            `
+            `,
           )
           .join("")}
       </div>
 
       ${filteredProducts.length === 0 ? '<p class="dashboard-placeholder">No products found for your search/filter.</p>' : ""}
 
-      ${totalPages > 1 ? `
+      ${
+        totalPages > 1
+          ? `
         <div class="dashboard-catalog-pagination">
           <button type="button" class="page-btn" id="dashboardPagePrev" ${adminCatalogPage === 1 ? "disabled" : ""}>Prev</button>
           <span class="page-indicator">Page ${adminCatalogPage} / ${totalPages}</span>
           <button type="button" class="page-btn" id="dashboardPageNext" ${adminCatalogPage === totalPages ? "disabled" : ""}>Next</button>
         </div>
-      ` : ""}
+      `
+          : ""
+      }
     `;
 
     const searchInput = document.getElementById("dashboardCatalogSearch");
@@ -1977,11 +2349,15 @@ function renderDashboardPage() {
     });
   };
 
-  const renderOrdersAccordion = (orders, emptyMessage = "No orders found.", options = {}) => {
+  const renderOrdersAccordion = (
+    orders,
+    emptyMessage = "No orders found.",
+    options = {},
+  ) => {
     const {
       container = contentBody,
       showDispatchActions = false,
-      showOrderUpdateAction = false
+      showOrderUpdateAction = false,
     } = options;
 
     primaryActionBtn.hidden = true;
@@ -2000,35 +2376,42 @@ function renderDashboardPage() {
             const isOpen = index === 0;
             const isGuestOrder = Boolean(order.isGuest);
             const hasAssignedSuperstockist = Boolean(
-              order.referenceIds?.superstockistId && order.referenceIds.superstockistId !== "NA"
+              order.referenceIds?.superstockistId &&
+              order.referenceIds.superstockistId !== "NA",
             );
             const refIds = isGuestOrder
               ? {
-                  superstockistId: hasAssignedSuperstockist ? order.referenceIds.superstockistId : "NA",
+                  superstockistId: hasAssignedSuperstockist
+                    ? order.referenceIds.superstockistId
+                    : "NA",
                   stockistId: "NA",
-                  dealerId: "NA"
+                  dealerId: "NA",
                 }
               : order.referenceIds;
             const superstockistUser = mockUsers.find(
-              (user) => user.role === "Superstockist" && user.referenceNumber === refIds.superstockistId
+              (user) =>
+                user.role === "Superstockist" &&
+                user.referenceNumber === refIds.superstockistId,
             );
             const superstockistDisplay = showOrderUpdateAction
-              ? (superstockistUser
-                  ? `${superstockistUser.email} - ${superstockistUser.serviceAreaPincode ?? "NA"}`
-                  : "NA")
+              ? superstockistUser
+                ? `${superstockistUser.email} - ${superstockistUser.serviceAreaPincode ?? "NA"}`
+                : "NA"
               : refIds.superstockistId;
             const dispatchAt = order.dispatch?.completedAt ?? "";
             const dispatchComments = order.dispatch?.comments ?? "";
-            const dispatchState = order.dispatch?.status ?? (dispatchAt ? "dispatched" : "pending");
-            const dispatchInfo = dispatchState !== "pending"
-              ? `
+            const dispatchState =
+              order.dispatch?.status ?? (dispatchAt ? "dispatched" : "pending");
+            const dispatchInfo =
+              dispatchState !== "pending"
+                ? `
                 <div class="dashboard-dispatch-details">
                   <p><strong>Dispatch Status:</strong> ${dispatchState === "cancelled" ? "Cancelled" : "Dispatched"}</p>
                   ${dispatchState === "dispatched" && dispatchAt ? `<p><strong>Dispatch Completed At:</strong> ${dispatchAt.replace("T", " ")}</p>` : ""}
                   ${dispatchComments ? `<p><strong>Comments:</strong> ${dispatchComments}</p>` : ""}
                 </div>
               `
-              : "";
+                : "";
 
             return `
               <article class="dashboard-order-accordion-item ${isOpen ? "open" : ""}" data-order-acc>
@@ -2064,17 +2447,25 @@ function renderDashboardPage() {
                     <strong>${formatCurrency(order.total)}</strong>
                   </div>
 
-                  ${showOrderUpdateAction ? `
+                  ${
+                    showOrderUpdateAction
+                      ? `
                     <div class="dashboard-dispatch-actions">
                       <button type="button" class="dashboard-primary-btn" data-update-order="${order.id}"><span aria-hidden="true">✎</span> Update Order</button>
                     </div>
-                  ` : ""}
+                  `
+                      : ""
+                  }
 
-                  ${showDispatchActions ? `
+                  ${
+                    showDispatchActions
+                      ? `
                     <div class="dashboard-dispatch-actions">
                       <button type="button" class="dashboard-primary-btn" data-dispatch-complete-order="${order.id}"><span aria-hidden="true">✎</span> Update Status</button>
                     </div>
-                  ` : ""}
+                  `
+                      : ""
+                  }
 
                   ${dispatchInfo}
                 </div>
@@ -2085,8 +2476,12 @@ function renderDashboardPage() {
       </div>
     `;
 
-    const accordionItems = Array.from(container.querySelectorAll("[data-order-acc]"));
-    const toggleButtons = Array.from(container.querySelectorAll("[data-order-toggle]"));
+    const accordionItems = Array.from(
+      container.querySelectorAll("[data-order-acc]"),
+    );
+    const toggleButtons = Array.from(
+      container.querySelectorAll("[data-order-toggle]"),
+    );
 
     toggleButtons.forEach((toggleBtn, index) => {
       toggleBtn.addEventListener("click", () => {
@@ -2103,7 +2498,9 @@ function renderDashboardPage() {
       });
     });
 
-    const dispatchButtons = Array.from(container.querySelectorAll("[data-dispatch-complete-order]"));
+    const dispatchButtons = Array.from(
+      container.querySelectorAll("[data-dispatch-complete-order]"),
+    );
     dispatchButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const orderId = button.getAttribute("data-dispatch-complete-order");
@@ -2112,7 +2509,9 @@ function renderDashboardPage() {
       });
     });
 
-    const updateOrderButtons = Array.from(container.querySelectorAll("[data-update-order]"));
+    const updateOrderButtons = Array.from(
+      container.querySelectorAll("[data-update-order]"),
+    );
     updateOrderButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const orderId = button.getAttribute("data-update-order");
@@ -2123,9 +2522,15 @@ function renderDashboardPage() {
   };
 
   const renderSuperstockistDispatchPanel = (ordersForSuperstockist) => {
-    const getDispatchState = (order) => order.dispatch?.status ?? (order.dispatch?.completedAt ? "dispatched" : "pending");
-    const pendingOrders = ordersForSuperstockist.filter((order) => getDispatchState(order) === "pending");
-    const completedOrders = ordersForSuperstockist.filter((order) => getDispatchState(order) !== "pending");
+    const getDispatchState = (order) =>
+      order.dispatch?.status ??
+      (order.dispatch?.completedAt ? "dispatched" : "pending");
+    const pendingOrders = ordersForSuperstockist.filter(
+      (order) => getDispatchState(order) === "pending",
+    );
+    const completedOrders = ordersForSuperstockist.filter(
+      (order) => getDispatchState(order) !== "pending",
+    );
 
     contentBody.innerHTML = `
       <div class="dashboard-dispatch-toggle" role="tablist" aria-label="Dispatch status filter">
@@ -2135,24 +2540,28 @@ function renderDashboardPage() {
       <div id="superstockistDispatchOrders"></div>
     `;
 
-    const dispatchTarget = document.getElementById("superstockistDispatchOrders");
+    const dispatchTarget = document.getElementById(
+      "superstockistDispatchOrders",
+    );
     if (!dispatchTarget) return;
 
     if (superstockistDispatchTab === "pending") {
       renderOrdersAccordion(
         pendingOrders,
         "No pending dispatch orders for your Superstockist reference ID.",
-        { container: dispatchTarget, showDispatchActions: true }
+        { container: dispatchTarget, showDispatchActions: true },
       );
     } else {
       renderOrdersAccordion(
         completedOrders,
         "No shipped orders for your Superstockist reference ID.",
-        { container: dispatchTarget, showDispatchActions: false }
+        { container: dispatchTarget, showDispatchActions: false },
       );
     }
 
-    const tabButtons = Array.from(contentBody.querySelectorAll("[data-dispatch-tab]"));
+    const tabButtons = Array.from(
+      contentBody.querySelectorAll("[data-dispatch-tab]"),
+    );
     tabButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const selectedTab = button.getAttribute("data-dispatch-tab");
@@ -2177,15 +2586,23 @@ function renderDashboardPage() {
 
       const emailQuery = userMgmtSearchTerm.trim().toLowerCase();
       const filteredUsers = mockUsers.filter((user) => {
-        const matchesEmail = !emailQuery || user.email.toLowerCase().includes(emailQuery);
-        const matchesRole = userMgmtRoleFilter === "all" || user.role === userMgmtRoleFilter;
+        const matchesEmail =
+          !emailQuery || user.email.toLowerCase().includes(emailQuery);
+        const matchesRole =
+          userMgmtRoleFilter === "all" || user.role === userMgmtRoleFilter;
         return matchesEmail && matchesRole;
       });
 
-      const totalUserPages = Math.max(1, Math.ceil(filteredUsers.length / USER_TABLE_ITEMS_PER_PAGE));
+      const totalUserPages = Math.max(
+        1,
+        Math.ceil(filteredUsers.length / USER_TABLE_ITEMS_PER_PAGE),
+      );
       userManagementPage = Math.min(userManagementPage, totalUserPages);
       const userStart = (userManagementPage - 1) * USER_TABLE_ITEMS_PER_PAGE;
-      const pageUsers = filteredUsers.slice(userStart, userStart + USER_TABLE_ITEMS_PER_PAGE);
+      const pageUsers = filteredUsers.slice(
+        userStart,
+        userStart + USER_TABLE_ITEMS_PER_PAGE,
+      );
 
       contentBody.innerHTML = `
         <div class="dashboard-catalog-controls">
@@ -2225,14 +2642,31 @@ function renderDashboardPage() {
               </tr>
             </thead>
             <tbody>
-              ${pageUsers.length === 0 ? `<tr><td colspan="9" class="dashboard-table-empty">No users match your search.</td></tr>` : pageUsers
-                .map(
-                  (user) => {
-                    const hasCommission = ["Superstockist", "Stockist", "Dealer"].includes(user.role);
-                    const commissionDisplay = hasCommission ? `${user.commission ?? 0}%` : "NA";
-                    const refDisplay = ["Admin", "Superstockist", "Customer"].includes(user.role) ? "NA" : user.referenceNumber;
-                    const serviceAreaPincodeDisplay = user.role === "Superstockist" ? (user.serviceAreaPincode ?? "NA") : "NA";
-                    return `
+              ${
+                pageUsers.length === 0
+                  ? `<tr><td colspan="9" class="dashboard-table-empty">No users match your search.</td></tr>`
+                  : pageUsers
+                      .map((user) => {
+                        const hasCommission = [
+                          "Superstockist",
+                          "Stockist",
+                          "Dealer",
+                        ].includes(user.role);
+                        const commissionDisplay = hasCommission
+                          ? `${user.commission ?? 0}%`
+                          : "NA";
+                        const refDisplay = [
+                          "Admin",
+                          "Superstockist",
+                          "Customer",
+                        ].includes(user.role)
+                          ? "NA"
+                          : user.referenceNumber;
+                        const serviceAreaPincodeDisplay =
+                          user.role === "Superstockist"
+                            ? (user.serviceAreaPincode ?? "NA")
+                            : "NA";
+                        return `
                     <tr>
                       <td>${user.firstName}</td>
                       <td>${user.lastName}</td>
@@ -2249,9 +2683,9 @@ function renderDashboardPage() {
                       </td>
                     </tr>
                   `;
-                  }
-                )
-                .join("")}
+                      })
+                      .join("")
+              }
             </tbody>
           </table>
         </div>
@@ -2298,14 +2732,16 @@ function renderDashboardPage() {
           const userId = button.getAttribute("data-remove-user");
           if (!userId) return;
           const user = mockUsers.find((item) => item.id === userId);
-          const userLabel = user ? `${user.firstName} ${user.lastName}` : "this user";
+          const userLabel = user
+            ? `${user.firstName} ${user.lastName}`
+            : "this user";
           openDeleteModal(
             "Warning",
             `You are about to remove ${userLabel}. Click Proceed to continue to final confirmation.`,
             () => {
               mockUsers = mockUsers.filter((item) => item.id !== userId);
               renderPanelBody();
-            }
+            },
           );
         });
       });
@@ -2333,12 +2769,16 @@ function renderDashboardPage() {
     if (activeRole === "admin" && activeMenuItem === "View Orders") {
       const orderQuery = adminOrderSearchTerm.trim().toLowerCase();
       const filteredOrders = mockDashboardOrders.filter((order) => {
-        const matchesSearch = !orderQuery
-          || order.id.toLowerCase().includes(orderQuery)
-          || `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase().includes(orderQuery)
-          || order.customer.email.toLowerCase().includes(orderQuery);
-        const matchesFilter = adminOrderFilterValue === "all"
-          || (adminOrderFilterValue === "guest" && Boolean(order.isGuest));
+        const matchesSearch =
+          !orderQuery ||
+          order.id.toLowerCase().includes(orderQuery) ||
+          `${order.customer.firstName} ${order.customer.lastName}`
+            .toLowerCase()
+            .includes(orderQuery) ||
+          order.customer.email.toLowerCase().includes(orderQuery);
+        const matchesFilter =
+          adminOrderFilterValue === "all" ||
+          (adminOrderFilterValue === "guest" && Boolean(order.isGuest));
         return matchesSearch && matchesFilter;
       });
 
@@ -2383,12 +2823,15 @@ function renderDashboardPage() {
 
       renderOrdersAccordion(filteredOrders, "No orders found.", {
         container: adminOrdersTarget,
-        showOrderUpdateAction: true
+        showOrderUpdateAction: true,
       });
       return;
     }
 
-    if (activeRole === "admin" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+    if (
+      activeRole === "admin" &&
+      (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")
+    ) {
       renderAnalyticsPanel("admin");
       return;
     }
@@ -2396,19 +2839,26 @@ function renderDashboardPage() {
     if (activeRole === "superstockist" && activeMenuItem === "View Orders") {
       const superstockistReferenceId = roleReferenceIds.superstockist;
       const filteredOrders = mockDashboardOrders.filter(
-        (order) => order.referenceIds.superstockistId === superstockistReferenceId
+        (order) =>
+          order.referenceIds.superstockistId === superstockistReferenceId,
       );
       renderSuperstockistDispatchPanel(filteredOrders);
 
       return;
     }
 
-    if (activeRole === "superstockist" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+    if (
+      activeRole === "superstockist" &&
+      (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")
+    ) {
       renderAnalyticsPanel("superstockist");
       return;
     }
 
-    if (activeRole === "superstockist" && activeMenuItem === "Invite Stockist or Dealers") {
+    if (
+      activeRole === "superstockist" &&
+      activeMenuItem === "Invite Stockist or Dealers"
+    ) {
       primaryActionBtn.hidden = false;
       primaryActionBtn.textContent = "+ Add Stockist or Dealer";
 
@@ -2439,7 +2889,7 @@ function renderDashboardPage() {
                         <button type="button" class="dashboard-remove-btn" data-remove-sd-user="${user.id}">Remove</button>
                       </td>
                     </tr>
-                  `
+                  `,
                 )
                 .join("")}
             </tbody>
@@ -2447,20 +2897,28 @@ function renderDashboardPage() {
         </div>
       `;
 
-      const removeButtons = contentBody.querySelectorAll("[data-remove-sd-user]");
+      const removeButtons = contentBody.querySelectorAll(
+        "[data-remove-sd-user]",
+      );
       removeButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const userId = button.getAttribute("data-remove-sd-user");
           if (!userId) return;
-          const user = mockStockistDealerUsers.find((item) => item.id === userId);
-          const userLabel = user ? `${user.firstName} ${user.lastName}` : "this user";
+          const user = mockStockistDealerUsers.find(
+            (item) => item.id === userId,
+          );
+          const userLabel = user
+            ? `${user.firstName} ${user.lastName}`
+            : "this user";
           openDeleteModal(
             "Warning",
             `You are about to remove ${userLabel}. Click Proceed to continue to final confirmation.`,
             () => {
-              mockStockistDealerUsers = mockStockistDealerUsers.filter((item) => item.id !== userId);
+              mockStockistDealerUsers = mockStockistDealerUsers.filter(
+                (item) => item.id !== userId,
+              );
               renderPanelBody();
-            }
+            },
           );
         });
       });
@@ -2499,7 +2957,7 @@ function renderDashboardPage() {
                         <button type="button" class="dashboard-remove-btn" data-remove-dealer-user="${user.id}">Remove</button>
                       </td>
                     </tr>
-                  `
+                  `,
                 )
                 .join("")}
             </tbody>
@@ -2507,20 +2965,26 @@ function renderDashboardPage() {
         </div>
       `;
 
-      const removeButtons = contentBody.querySelectorAll("[data-remove-dealer-user]");
+      const removeButtons = contentBody.querySelectorAll(
+        "[data-remove-dealer-user]",
+      );
       removeButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const userId = button.getAttribute("data-remove-dealer-user");
           if (!userId) return;
           const user = mockDealerUsers.find((item) => item.id === userId);
-          const userLabel = user ? `${user.firstName} ${user.lastName}` : "this user";
+          const userLabel = user
+            ? `${user.firstName} ${user.lastName}`
+            : "this user";
           openDeleteModal(
             "Warning",
             `You are about to remove ${userLabel}. Click Proceed to continue to final confirmation.`,
             () => {
-              mockDealerUsers = mockDealerUsers.filter((item) => item.id !== userId);
+              mockDealerUsers = mockDealerUsers.filter(
+                (item) => item.id !== userId,
+              );
               renderPanelBody();
-            }
+            },
           );
         });
       });
@@ -2531,13 +2995,19 @@ function renderDashboardPage() {
     if (activeRole === "stockist" && activeMenuItem === "View Orders") {
       const stockistReferenceId = roleReferenceIds.stockist;
       const filteredOrders = mockDashboardOrders.filter(
-        (order) => order.referenceIds.stockistId === stockistReferenceId
+        (order) => order.referenceIds.stockistId === stockistReferenceId,
       );
-      renderOrdersAccordion(filteredOrders, "No orders found for your Stockist reference ID.");
+      renderOrdersAccordion(
+        filteredOrders,
+        "No orders found for your Stockist reference ID.",
+      );
       return;
     }
 
-    if (activeRole === "stockist" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+    if (
+      activeRole === "stockist" &&
+      (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")
+    ) {
       renderAnalyticsPanel("stockist");
       return;
     }
@@ -2545,13 +3015,19 @@ function renderDashboardPage() {
     if (activeRole === "dealer" && activeMenuItem === "View Orders") {
       const dealerReferenceId = roleReferenceIds.dealer;
       const filteredOrders = mockDashboardOrders.filter(
-        (order) => order.referenceIds.dealerId === dealerReferenceId
+        (order) => order.referenceIds.dealerId === dealerReferenceId,
       );
-      renderOrdersAccordion(filteredOrders, "No orders found for your Dealer reference ID.");
+      renderOrdersAccordion(
+        filteredOrders,
+        "No orders found for your Dealer reference ID.",
+      );
       return;
     }
 
-    if (activeRole === "dealer" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+    if (
+      activeRole === "dealer" &&
+      (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")
+    ) {
       renderAnalyticsPanel("dealer");
       return;
     }
@@ -2564,10 +3040,22 @@ function renderDashboardPage() {
     activeMenuItem = itemName === "Analytics" ? "Earnings Summary" : itemName;
 
     const hideHeaderForAdminView =
-      (activeRole === "admin" && (activeMenuItem === "Manage Product Catalog" || activeMenuItem === "User Management" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
-      || (activeRole === "superstockist" && (activeMenuItem === "Invite Stockist or Dealers" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
-      || (activeRole === "stockist" && (activeMenuItem === "Invite Dealer" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
-      || (activeRole === "dealer" && (activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"));
+      (activeRole === "admin" &&
+        (activeMenuItem === "Manage Product Catalog" ||
+          activeMenuItem === "User Management" ||
+          activeMenuItem === "View Orders" ||
+          activeMenuItem === "Earnings Summary")) ||
+      (activeRole === "superstockist" &&
+        (activeMenuItem === "Invite Stockist or Dealers" ||
+          activeMenuItem === "View Orders" ||
+          activeMenuItem === "Earnings Summary")) ||
+      (activeRole === "stockist" &&
+        (activeMenuItem === "Invite Dealer" ||
+          activeMenuItem === "View Orders" ||
+          activeMenuItem === "Earnings Summary")) ||
+      (activeRole === "dealer" &&
+        (activeMenuItem === "View Orders" ||
+          activeMenuItem === "Earnings Summary"));
 
     if (hideHeaderForAdminView) {
       contentTitle.textContent = "";
@@ -2583,7 +3071,10 @@ function renderDashboardPage() {
 
     const allMenuButtons = sidebarMenu.querySelectorAll(".dashboard-menu-btn");
     allMenuButtons.forEach((button) => {
-      const isActive = button.dataset.menuItem === activeMenuItem || (activeMenuItem === "Earnings Summary" && button.dataset.menuItem === "Analytics");
+      const isActive =
+        button.dataset.menuItem === activeMenuItem ||
+        (activeMenuItem === "Earnings Summary" &&
+          button.dataset.menuItem === "Analytics");
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-current", isActive ? "page" : "false");
     });
@@ -2611,7 +3102,10 @@ function renderDashboardPage() {
     contentCopy.textContent = `Use the ${label.toLowerCase()} tools from the left sidebar.`;
 
     sidebarMenu.innerHTML = menuItems
-      .map((item) => `<li><button type="button" class="dashboard-menu-btn" data-menu-item="${item}">${item}</button></li>`)
+      .map(
+        (item) =>
+          `<li><button type="button" class="dashboard-menu-btn" data-menu-item="${item}">${item}</button></li>`,
+      )
       .join("");
 
     const menuButtons = sidebarMenu.querySelectorAll(".dashboard-menu-btn");
@@ -2624,10 +3118,7 @@ function renderDashboardPage() {
     });
 
     if (menuItems.length > 0) {
-      const defaultMenuItem = roleDefaultMenuItems[role] && menuItems.includes(roleDefaultMenuItems[role])
-        ? roleDefaultMenuItems[role]
-        : menuItems[0];
-      setSelectedMenuItem(defaultMenuItem, label);
+      setSelectedMenuItem(menuItems[0], label);
     } else {
       contentBody.innerHTML = "";
       primaryActionBtn.hidden = true;
@@ -2651,7 +3142,10 @@ function renderDashboardPage() {
       return;
     }
 
-    if (activeRole === "superstockist" && activeMenuItem === "Invite Stockist or Dealers") {
+    if (
+      activeRole === "superstockist" &&
+      activeMenuItem === "Invite Stockist or Dealers"
+    ) {
       openStockistDealerFormModal();
       return;
     }
@@ -2693,7 +3187,8 @@ function renderDashboardPage() {
 
   if (dispatchCompleteModal) {
     dispatchCompleteModal.addEventListener("click", (event) => {
-      if (event.target === dispatchCompleteModal) closeDispatchCompleteFormModal();
+      if (event.target === dispatchCompleteModal)
+        closeDispatchCompleteFormModal();
     });
   }
 
@@ -2734,11 +3229,17 @@ function renderDashboardPage() {
   }
 
   if (closeStockistDealerModal) {
-    closeStockistDealerModal.addEventListener("click", closeStockistDealerFormModal);
+    closeStockistDealerModal.addEventListener(
+      "click",
+      closeStockistDealerFormModal,
+    );
   }
 
   if (cancelStockistDealerModal) {
-    cancelStockistDealerModal.addEventListener("click", closeStockistDealerFormModal);
+    cancelStockistDealerModal.addEventListener(
+      "click",
+      closeStockistDealerFormModal,
+    );
   }
 
   if (closeDealerInviteModal) {
@@ -2750,11 +3251,17 @@ function renderDashboardPage() {
   }
 
   if (closeDispatchCompleteModal) {
-    closeDispatchCompleteModal.addEventListener("click", closeDispatchCompleteFormModal);
+    closeDispatchCompleteModal.addEventListener(
+      "click",
+      closeDispatchCompleteFormModal,
+    );
   }
 
   if (cancelDispatchCompleteModal) {
-    cancelDispatchCompleteModal.addEventListener("click", closeDispatchCompleteFormModal);
+    cancelDispatchCompleteModal.addEventListener(
+      "click",
+      closeDispatchCompleteFormModal,
+    );
   }
 
   if (closeDeleteConfirmModal) {
@@ -2790,9 +3297,16 @@ function renderDashboardPage() {
         const imageInput = document.getElementById("editorImage");
         if (!imageInput) return;
 
-        const titleValue = String(titleInput?.value ?? "Product").trim() || "Product";
-        const categoryValue = String(categoryInput?.value ?? "grains").trim() || "grains";
-        const generatedImage = createGroceryImage(titleValue, categoryValue, "#e8f0e3", "#8fb57d");
+        const titleValue =
+          String(titleInput?.value ?? "Product").trim() || "Product";
+        const categoryValue =
+          String(categoryInput?.value ?? "grains").trim() || "grains";
+        const generatedImage = createGroceryImage(
+          titleValue,
+          categoryValue,
+          "#e8f0e3",
+          "#8fb57d",
+        );
 
         imageInput.value = generatedImage;
         if (mockUploadFileName) {
@@ -2813,15 +3327,32 @@ function renderDashboardPage() {
       const stockCount = Number(formData.get("stockCount"));
       const customImage = String(formData.get("image") ?? "").trim();
 
-      if (!title || !description || Number.isNaN(mrp) || Number.isNaN(discountedPrice) || Number.isNaN(stockCount) || mrp <= 0 || discountedPrice <= 0 || discountedPrice >= mrp || stockCount < 0) {
+      if (
+        !title ||
+        !description ||
+        Number.isNaN(mrp) ||
+        Number.isNaN(discountedPrice) ||
+        Number.isNaN(stockCount) ||
+        mrp <= 0 ||
+        discountedPrice <= 0 ||
+        discountedPrice >= mrp ||
+        stockCount < 0
+      ) {
         return;
       }
 
-      const fallbackImage = createGroceryImage(title, category, "#e8f0e3", "#8fb57d");
+      const fallbackImage = createGroceryImage(
+        title,
+        category,
+        "#e8f0e3",
+        "#8fb57d",
+      );
       const finalImage = customImage || fallbackImage;
 
       if (editingProductId) {
-        const existingProduct = products.find((product) => product.id === editingProductId);
+        const existingProduct = products.find(
+          (product) => product.id === editingProductId,
+        );
         if (existingProduct) {
           existingProduct.title = title;
           existingProduct.category = category;
@@ -2832,7 +3363,10 @@ function renderDashboardPage() {
           existingProduct.image = finalImage;
         }
       } else {
-        const baseSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        const baseSlug = title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "");
         let newId = baseSlug || "product";
         let duplicateCounter = 2;
         while (products.some((product) => product.id === newId)) {
@@ -2848,7 +3382,7 @@ function renderDashboardPage() {
           mrp,
           price: discountedPrice,
           stockCount: Math.floor(stockCount),
-          image: finalImage
+          image: finalImage,
         });
       }
 
@@ -2897,9 +3431,10 @@ function renderDashboardPage() {
       const referenceNumber = rolesWithoutRef.includes(role)
         ? "NA"
         : String(formData.get("referenceNumber") ?? "").trim();
-      const serviceAreaPincode = role === "Superstockist"
-        ? String(formData.get("serviceAreaPincode") ?? "").trim()
-        : "";
+      const serviceAreaPincode =
+        role === "Superstockist"
+          ? String(formData.get("serviceAreaPincode") ?? "").trim()
+          : "";
       const commission = commissionRoles.includes(role)
         ? Number(formData.get("commission"))
         : null;
@@ -2907,7 +3442,11 @@ function renderDashboardPage() {
       if (!firstName || !lastName || !email) return;
       if (!rolesWithoutRef.includes(role) && !referenceNumber) return;
       if (role === "Superstockist" && !serviceAreaPincode) return;
-      if (commissionRoles.includes(role) && (Number.isNaN(commission) || commission < 0 || commission > 100)) return;
+      if (
+        commissionRoles.includes(role) &&
+        (Number.isNaN(commission) || commission < 0 || commission > 100)
+      )
+        return;
 
       const newId = `usr-${Date.now()}`;
       const newUser = {
@@ -2916,7 +3455,7 @@ function renderDashboardPage() {
         lastName,
         email,
         role,
-        referenceNumber
+        referenceNumber,
       };
       if (role === "Superstockist") {
         newUser.serviceAreaPincode = serviceAreaPincode;
@@ -2938,7 +3477,9 @@ function renderDashboardPage() {
       event.preventDefault();
 
       const formData = new FormData(userRoleEditorForm);
-      const userId = String(formData.get("userId") ?? editingUserId ?? "").trim();
+      const userId = String(
+        formData.get("userId") ?? editingUserId ?? "",
+      ).trim();
       if (!userId) return;
 
       const matchedUser = mockUsers.find((user) => user.id === userId);
@@ -2951,11 +3492,16 @@ function renderDashboardPage() {
       const commission = commissionRoles.includes(role)
         ? Number(formData.get("commission"))
         : null;
-      const serviceAreaPincode = role === "Superstockist"
-        ? String(formData.get("serviceAreaPincode") ?? "").trim()
-        : "";
+      const serviceAreaPincode =
+        role === "Superstockist"
+          ? String(formData.get("serviceAreaPincode") ?? "").trim()
+          : "";
 
-      if (commissionRoles.includes(role) && (Number.isNaN(commission) || commission < 0 || commission > 100)) return;
+      if (
+        commissionRoles.includes(role) &&
+        (Number.isNaN(commission) || commission < 0 || commission > 100)
+      )
+        return;
       if (role === "Superstockist" && !serviceAreaPincode) return;
 
       matchedUser.role = role;
@@ -2984,7 +3530,9 @@ function renderDashboardPage() {
       const firstName = String(formData.get("firstName") ?? "").trim();
       const lastName = String(formData.get("lastName") ?? "").trim();
       const email = String(formData.get("email") ?? "").trim();
-      const type = String(formData.get("type") ?? "stockist").trim().toLowerCase();
+      const type = String(formData.get("type") ?? "stockist")
+        .trim()
+        .toLowerCase();
       const referenceId = String(formData.get("referenceId") ?? "").trim();
 
       if (!firstName || !lastName || !email || !referenceId) return;
@@ -2996,7 +3544,7 @@ function renderDashboardPage() {
         email,
         type,
         stockistReferenceId: type === "stockist" ? referenceId : "-",
-        dealerReferenceId: type === "dealer" ? referenceId : "-"
+        dealerReferenceId: type === "dealer" ? referenceId : "-",
       };
 
       mockStockistDealerUsers.unshift(newEntry);
@@ -3013,10 +3561,21 @@ function renderDashboardPage() {
       const firstName = String(formData.get("firstName") ?? "").trim();
       const lastName = String(formData.get("lastName") ?? "").trim();
       const email = String(formData.get("email") ?? "").trim();
-      const stockistReferenceId = String(formData.get("stockistReferenceId") ?? "").trim();
-      const dealerReferenceId = String(formData.get("dealerReferenceId") ?? "").trim();
+      const stockistReferenceId = String(
+        formData.get("stockistReferenceId") ?? "",
+      ).trim();
+      const dealerReferenceId = String(
+        formData.get("dealerReferenceId") ?? "",
+      ).trim();
 
-      if (!firstName || !lastName || !email || !stockistReferenceId || !dealerReferenceId) return;
+      if (
+        !firstName ||
+        !lastName ||
+        !email ||
+        !stockistReferenceId ||
+        !dealerReferenceId
+      )
+        return;
 
       mockDealerUsers.unshift({
         id: `dl-${Date.now()}`,
@@ -3024,7 +3583,7 @@ function renderDashboardPage() {
         lastName,
         email,
         stockistReferenceId,
-        dealerReferenceId
+        dealerReferenceId,
       });
 
       closeDealerFormModal();
@@ -3039,21 +3598,28 @@ function renderDashboardPage() {
       const formData = new FormData(dispatchCompleteForm);
       const orderId = String(formData.get("orderId") ?? "").trim();
       const comments = String(formData.get("comments") ?? "").trim();
-      const dispatchStatus = String(formData.get("dispatchStatus") ?? "dispatched").trim().toLowerCase();
+      const dispatchStatus = String(
+        formData.get("dispatchStatus") ?? "dispatched",
+      )
+        .trim()
+        .toLowerCase();
       const completedAt = String(formData.get("completedAt") ?? "").trim();
 
       if (!orderId) return;
       if (dispatchStatus === "dispatched" && !completedAt) return;
 
-      const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+      const matchedOrder = mockDashboardOrders.find(
+        (order) => order.id === orderId,
+      );
       if (!matchedOrder) return;
 
       matchedOrder.dispatch = {
         status: dispatchStatus === "cancelled" ? "cancelled" : "dispatched",
         completedAt: dispatchStatus === "dispatched" ? completedAt : "",
-        comments
+        comments,
       };
-      matchedOrder.status = dispatchStatus === "cancelled" ? "Cancelled" : "Dispatched";
+      matchedOrder.status =
+        dispatchStatus === "cancelled" ? "Cancelled" : "Dispatched";
 
       closeDispatchCompleteFormModal();
       renderPanelBody();
@@ -3066,11 +3632,15 @@ function renderDashboardPage() {
 
       const formData = new FormData(orderUpdateForm);
       const orderId = String(formData.get("orderId") ?? "").trim();
-      const superstockistRef = String(formData.get("superstockistRef") ?? "").trim();
+      const superstockistRef = String(
+        formData.get("superstockistRef") ?? "",
+      ).trim();
 
       if (!orderId || !superstockistRef) return;
 
-      const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+      const matchedOrder = mockDashboardOrders.find(
+        (order) => order.id === orderId,
+      );
       if (!matchedOrder) return;
 
       matchedOrder.referenceIds.superstockistId = superstockistRef;
