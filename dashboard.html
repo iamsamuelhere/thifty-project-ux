@@ -62,7 +62,7 @@
   <div class="modal-overlay" id="productEditorModal" hidden>
     <div class="product-editor-modal">
       <button class="modal-close" id="closeProductEditor" type="button" aria-label="Close">✕</button>
-      <h2 id="productEditorTitle">Update Product</h2>
+      <h2 id="productEditorTitle">Add Product</h2>
       <form id="productEditorForm" class="product-editor-form">
         <label for="editorTitle">Product Name</label>
         <input id="editorTitle" name="title" type="text" required />
@@ -78,8 +78,14 @@
         <label for="editorDescription">Description</label>
         <textarea id="editorDescription" name="description" rows="3" required></textarea>
 
-        <label for="editorPrice">Price (INR)</label>
-        <input id="editorPrice" name="price" type="number" min="0.01" step="0.01" required />
+        <label for="editorMrp">MRP Price (INR)</label>
+        <input id="editorMrp" name="mrp" type="number" min="0.01" step="0.01" required />
+
+        <label for="editorDiscountedPrice">Discounted Price (INR)</label>
+        <input id="editorDiscountedPrice" name="discountedPrice" type="number" min="0.01" step="0.01" required />
+
+        <label for="editorStockCount">Stock Count</label>
+        <input id="editorStockCount" name="stockCount" type="number" min="0" step="1" required />
 
         <label>Product Image</label>
         <div class="mock-upload-row">
@@ -90,7 +96,7 @@
 
         <div class="product-editor-actions">
           <button type="button" class="dashboard-secondary-btn" id="cancelProductEditor">Cancel</button>
-          <button type="submit" class="dashboard-primary-btn">Save Product</button>
+          <button type="submit" class="dashboard-primary-btn" id="productEditorSubmitBtn">Add Product</button>
         </div>
       </form>
     </div>
@@ -115,14 +121,65 @@
           <option value="Admin">Admin</option>
           <option value="Superstockist">Superstockist</option>
           <option value="Stockist">Stockist</option>
+          <option value="Dealer">Dealer</option>
+          <option value="Customer">Customer</option>
         </select>
 
-        <label for="userReferenceNumber">Reference Number</label>
-        <input id="userReferenceNumber" name="referenceNumber" type="text" required />
+        <div id="userReferenceRow">
+          <label for="userReferenceNumber">Reference Number</label>
+          <input id="userReferenceNumber" name="referenceNumber" type="text" />
+        </div>
+
+        <div id="userPincodeRow" hidden>
+          <label for="userServiceAreaPincode">Service Area Pincode</label>
+          <input id="userServiceAreaPincode" name="serviceAreaPincode" type="text" inputmode="numeric" pattern="[0-9]{6}" placeholder="e.g. 560001" />
+        </div>
+
+        <div id="userCommissionRow" hidden>
+          <label for="userCommission">Commission %</label>
+          <input id="userCommission" name="commission" type="number" min="0" max="100" step="0.01" placeholder="e.g. 5" />
+        </div>
 
         <div class="product-editor-actions">
           <button type="button" class="dashboard-secondary-btn" id="cancelUserEditor">Cancel</button>
-          <button type="submit" class="dashboard-primary-btn">Save User</button>
+          <button type="submit" class="dashboard-primary-btn">Add User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="userRoleEditorModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeUserRoleEditor" type="button" aria-label="Close">✕</button>
+      <h2>Update User</h2>
+      <form id="userRoleEditorForm" class="product-editor-form">
+        <input id="userRoleEditorId" name="userId" type="text" hidden />
+
+        <label>User</label>
+        <p id="userRoleEditorName" class="dashboard-modal-readonly">-</p>
+
+        <label for="userRoleEditorSelect">Upgrade Role</label>
+        <select id="userRoleEditorSelect" name="role" required>
+          <option value="Customer">Customer</option>
+          <option value="Stockist">Stockist</option>
+          <option value="Superstockist">Superstockist</option>
+          <option value="Dealer">Dealer</option>
+          <option value="Admin">Admin</option>
+        </select>
+
+        <div id="userRoleCommissionRow">
+          <label for="userRoleCommission">Commission %</label>
+          <input id="userRoleCommission" name="commission" type="number" min="0" max="100" step="0.01" placeholder="e.g. 5" />
+        </div>
+
+        <div id="userRolePincodeRow" hidden>
+          <label for="userRoleServiceAreaPincode">Service Area Pincode</label>
+          <input id="userRoleServiceAreaPincode" name="serviceAreaPincode" type="text" inputmode="numeric" pattern="[0-9]{6}" placeholder="e.g. 560001" />
+        </div>
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelUserRoleEditor">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Update User</button>
         </div>
       </form>
     </div>
@@ -225,6 +282,31 @@
         <button type="button" class="dashboard-secondary-btn" id="cancelDeleteConfirmModal">Cancel</button>
         <button type="button" class="dashboard-primary-btn" id="confirmDeleteConfirmModal">Confirm Delete</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="orderUpdateModal" hidden>
+    <div class="product-editor-modal">
+      <button class="modal-close" id="closeOrderUpdateModal" type="button" aria-label="Close">✕</button>
+      <h2 id="orderUpdateTitle">Update Order</h2>
+      <form id="orderUpdateForm" class="product-editor-form">
+        <input id="orderUpdateOrderId" name="orderId" type="text" hidden />
+
+        <p id="orderUpdateCopy" class="dashboard-modal-readonly"></p>
+
+        <div id="orderUpdateCurrentSsRow" hidden>
+          <label>Current Superstockist</label>
+          <p id="orderUpdateCurrentSs" class="dashboard-modal-readonly">NA</p>
+        </div>
+
+        <label for="orderUpdateSuperstockistSelect" id="orderUpdateSelectLabel">Assign Superstockist</label>
+        <select id="orderUpdateSuperstockistSelect" name="superstockistRef" required></select>
+
+        <div class="product-editor-actions">
+          <button type="button" class="dashboard-secondary-btn" id="cancelOrderUpdateModal">Cancel</button>
+          <button type="submit" class="dashboard-primary-btn">Update Order</button>
+        </div>
+      </form>
     </div>
   </div>
 

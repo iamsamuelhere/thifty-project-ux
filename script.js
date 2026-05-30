@@ -114,6 +114,7 @@ const products = [
 ];
 
 const cart = new Map();
+const productImageIndexes = new Map();
 let catalogSearchTerm = "";
 let catalogFilterValue = "all";
 const CATALOG_ITEMS_PER_PAGE = 8;
@@ -146,6 +147,24 @@ function createGroceryImage(title, subtitle, colorStart, colorEnd) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
   return `assets/products/photos/${slug}.jpg`;
+}
+
+function createGalleryFallbackImage(title, variant) {
+  const safeTitle = encodeURIComponent(`${title} ${variant}`);
+  return `https://placehold.co/800x600/f0f5ef/1f2e1f?text=${safeTitle}`;
+}
+
+function getProductImages(product) {
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    return product.images;
+  }
+
+  const base = product.image || imageFallback(product.title || "Product");
+  return [
+    base,
+    createGalleryFallbackImage(product.title || "Product", "View 2"),
+    createGalleryFallbackImage(product.title || "Product", "View 3")
+  ];
 }
 
 function setupProfileDropdown() {
@@ -280,14 +299,41 @@ function renderProducts() {
   productGrid.innerHTML = pageItems.map((product) => {
     const qty = cart.get(product.id)?.quantity ?? 0;
     const isShown = shownQtyControls.has(product.id);
+    const discountedPrice = Number(product.price);
+    const inferredMrp = Number((discountedPrice * 1.2).toFixed(2));
+    const mrp = Number(product.mrp ?? inferredMrp);
+    const safeMrp = mrp > discountedPrice ? mrp : Number((discountedPrice + 0.01).toFixed(2));
+    const images = getProductImages(product);
+    const totalImages = images.length;
+    const currentImageIndex = productImageIndexes.get(product.id) ?? 0;
+    const safeIndex = ((currentImageIndex % totalImages) + totalImages) % totalImages;
+    const activeImage = images[safeIndex];
     return `
       <article class="product-card">
-        <img src="${product.image}" alt="${product.title}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback("Image Unavailable")}';" />
+        <div class="product-image-wrap">
+          <img src="${activeImage}" alt="${product.title}" loading="lazy" onerror="this.onerror=null;this.src='${imageFallback("Image Unavailable")}';" />
+        </div>
+        ${totalImages > 1 ? `
+          <div class="img-nav-row">
+            <button class="img-nav-btn" data-image-nav="prev" data-id="${product.id}" type="button" aria-label="Previous image for ${product.title}">
+              <svg class="img-nav-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="img-counter">${safeIndex + 1}/${totalImages}</span>
+            <button class="img-nav-btn" data-image-nav="next" data-id="${product.id}" type="button" aria-label="Next image for ${product.title}">
+              <svg class="img-nav-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        ` : ""}
         <div class="product-content">
           <h3>${product.title}</h3>
           <p>${product.description}</p>
           <div class="price-row">
-            <span class="price">${formatCurrency(product.price)}</span>
+            <span class="price-mrp">MRP <s>${formatCurrency(safeMrp)}</s></span>
+            <span class="price">${formatCurrency(discountedPrice)}</span>
           </div>
           <div class="card-actions">
             <div class="qty-controls" id="qty-controls-${product.id}" ${isShown ? "" : "hidden"}>
@@ -314,6 +360,22 @@ function renderProducts() {
     const addId = event.target.dataset.add;
     const step = event.target.dataset.step;
     const stepId = event.target.dataset.id;
+    const imageNav = event.target.dataset.imageNav;
+    const imageNavId = event.target.dataset.id;
+
+    if (imageNav && imageNavId) {
+      const product = products.find((item) => item.id === imageNavId);
+      if (!product) return;
+      const images = getProductImages(product);
+      const totalImages = images.length;
+      if (totalImages <= 1) return;
+
+      const current = productImageIndexes.get(imageNavId) ?? 0;
+      const next = imageNav === "next" ? current + 1 : current - 1;
+      productImageIndexes.set(imageNavId, ((next % totalImages) + totalImages) % totalImages);
+      renderProducts();
+      return;
+    }
 
     if (step && stepId) {
       const existing = cart.get(stepId);
@@ -870,6 +932,7 @@ function renderDashboardPage() {
   const closeProductEditor = document.getElementById("closeProductEditor");
   const cancelProductEditor = document.getElementById("cancelProductEditor");
   const productEditorTitle = document.getElementById("productEditorTitle");
+  const productEditorSubmitBtn = document.getElementById("productEditorSubmitBtn");
   const productEditorForm = document.getElementById("productEditorForm");
   const mockUploadBtn = document.getElementById("mockUploadBtn");
   const mockUploadFileName = document.getElementById("mockUploadFileName");
@@ -877,6 +940,10 @@ function renderDashboardPage() {
   const closeUserEditor = document.getElementById("closeUserEditor");
   const cancelUserEditor = document.getElementById("cancelUserEditor");
   const userEditorForm = document.getElementById("userEditorForm");
+  const userRoleEditorModal = document.getElementById("userRoleEditorModal");
+  const closeUserRoleEditor = document.getElementById("closeUserRoleEditor");
+  const cancelUserRoleEditor = document.getElementById("cancelUserRoleEditor");
+  const userRoleEditorForm = document.getElementById("userRoleEditorForm");
   const stockistDealerModal = document.getElementById("stockistDealerModal");
   const closeStockistDealerModal = document.getElementById("closeStockistDealerModal");
   const cancelStockistDealerModal = document.getElementById("cancelStockistDealerModal");
@@ -897,20 +964,24 @@ function renderDashboardPage() {
   const confirmDeleteConfirmModal = document.getElementById("confirmDeleteConfirmModal");
   const deleteConfirmTitle = document.getElementById("deleteConfirmTitle");
   const deleteConfirmMessage = document.getElementById("deleteConfirmMessage");
+  const orderUpdateModal = document.getElementById("orderUpdateModal");
+  const closeOrderUpdateModal = document.getElementById("closeOrderUpdateModal");
+  const cancelOrderUpdateModal = document.getElementById("cancelOrderUpdateModal");
+  const orderUpdateForm = document.getElementById("orderUpdateForm");
 
   if (!sidebarTitle || !sidebarMenu || !contentTitle || !contentCopy || !contentBody || !primaryActionBtn) return;
 
   const roleReferenceIds = {
     superstockist: "SS-REF-317",
-    stockist: "ST-REF-903",
-    dealer: "DL-REF-903"
+    stockist: "ST-REF-317",
+    dealer: "DL-REF-317"
   };
 
   const roleMenuItems = {
-    admin: ["Manage Product Catalog", "User Management", "View Orders"],
-    superstockist: ["Invite Stockist or Dealers", "View Orders"],
-    stockist: ["Invite Dealer", "View Orders"],
-    dealer: ["View Orders"]
+    admin: ["Manage Product Catalog", "User Management", "View Orders", "Earnings Summary"],
+    superstockist: ["Invite Stockist or Dealers", "View Orders", "Earnings Summary"],
+    stockist: ["Invite Dealer", "View Orders", "Earnings Summary"],
+    dealer: ["View Orders", "Earnings Summary"]
   };
 
   const roleLabel = {
@@ -920,13 +991,27 @@ function renderDashboardPage() {
     dealer: "Dealer"
   };
 
+  const roleDefaultMenuItems = {
+    admin: "Earnings Summary"
+  };
+
   let activeRole = "admin";
-  let activeMenuItem = "Manage Product Catalog";
+  let activeMenuItem = "Earnings Summary";
   let editingProductId = null;
+  let editingUserId = null;
+  let userMgmtSearchTerm = "";
+  let userMgmtRoleFilter = "all";
   let adminCatalogSearchTerm = "";
   let adminCatalogFilterValue = "all";
   let adminCatalogPage = 1;
   let userManagementPage = 1;
+  let adminOrderSearchTerm = "";
+  let adminOrderFilterValue = "all";
+  let analyticsPeriodType = "all";
+  let analyticsDateValue = "";
+  let analyticsWeekValue = "";
+  let analyticsMonthValue = "";
+  let analyticsYearValue = "";
   let superstockistDispatchTab = "pending";
   let pendingDeleteAction = null;
   let mockUsers = [
@@ -944,7 +1029,59 @@ function renderDashboardPage() {
       lastName: "Nair",
       email: "priya.nair@gmail.com",
       role: "Superstockist",
-      referenceNumber: "REF-SS-102"
+      referenceNumber: "REF-SS-102",
+      serviceAreaPincode: "560001",
+      commission: 8
+    },
+    {
+      id: "usr-8",
+      firstName: "Mehul",
+      lastName: "Shah",
+      email: "mehul.shah@gmail.com",
+      role: "Superstockist",
+      referenceNumber: "REF-SS-214",
+      serviceAreaPincode: "500081",
+      commission: 7
+    },
+    {
+      id: "usr-10",
+      firstName: "Sonia",
+      lastName: "Malik",
+      email: "sonia.malik@gmail.com",
+      role: "Superstockist",
+      referenceNumber: "SS-REF-317",
+      serviceAreaPincode: "400001",
+      commission: 8
+    },
+    {
+      id: "usr-11",
+      firstName: "Harish",
+      lastName: "Menon",
+      email: "harish.menon@gmail.com",
+      role: "Superstockist",
+      referenceNumber: "SS-REF-402",
+      serviceAreaPincode: "411014",
+      commission: 7
+    },
+    {
+      id: "usr-12",
+      firstName: "Farah",
+      lastName: "Khan",
+      email: "farah.khan@gmail.com",
+      role: "Superstockist",
+      referenceNumber: "SS-REF-418",
+      serviceAreaPincode: "700091",
+      commission: 9
+    },
+    {
+      id: "usr-9",
+      firstName: "Lakshmi",
+      lastName: "Reddy",
+      email: "lakshmi.reddy@gmail.com",
+      role: "Superstockist",
+      referenceNumber: "REF-SS-325",
+      serviceAreaPincode: "600028",
+      commission: 9
     },
     {
       id: "usr-3",
@@ -952,15 +1089,25 @@ function renderDashboardPage() {
       lastName: "Patel",
       email: "rohan.patel@gmail.com",
       role: "Stockist",
-      referenceNumber: "REF-ST-213"
+      referenceNumber: "REF-ST-213",
+      commission: 5
     },
     {
-      id: "usr-4",
-      firstName: "Neha",
-      lastName: "Gupta",
-      email: "neha.gupta@gmail.com",
-      role: "Stockist",
-      referenceNumber: "REF-CUS-348"
+      id: "usr-7",
+      firstName: "Karan",
+      lastName: "Mehta",
+      email: "karan.mehta@gmail.com",
+      role: "Dealer",
+      referenceNumber: "REF-DL-701",
+      commission: 3
+    },
+    {
+      id: "usr-5",
+      firstName: "Ishaan",
+      lastName: "Kumar",
+      email: "ishaan.kumar@gmail.com",
+      role: "Customer",
+      referenceNumber: "REF-CUS-517"
     }
   ];
   let mockStockistDealerUsers = [
@@ -1013,10 +1160,11 @@ function renderDashboardPage() {
   let mockDashboardOrders = [
     {
       id: "ORD-250301",
+      isGuest: true,
       referenceIds: {
-        superstockistId: "SS-REF-301",
-        stockistId: "ST-REF-301",
-        dealerId: "DL-REF-301"
+        superstockistId: "NA",
+        stockistId: "NA",
+        dealerId: "NA"
       },
       orderDate: "01 Mar 2025",
       status: "Delivered",
@@ -1133,6 +1281,306 @@ function renderDashboardPage() {
     }
   ];
 
+  const fallbackCommissionByRole = {
+    Superstockist: 8,
+    Stockist: 5,
+    Dealer: 3
+  };
+
+  const monthIndexMap = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11
+  };
+
+  const parseDashboardOrderDate = (value) => {
+    if (!value) return null;
+    const parts = value.trim().split(/\s+/);
+    if (parts.length !== 3) return null;
+    const [dayText, monthText, yearText] = parts;
+    const day = Number(dayText);
+    const month = monthIndexMap[monthText];
+    const year = Number(yearText);
+    if (Number.isNaN(day) || Number.isNaN(year) || typeof month !== "number") return null;
+    return new Date(year, month, day);
+  };
+
+  const formatDateInputValue = (date) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const getIsoWeekValue = (date) => {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+    const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const day = target.getUTCDay() || 7;
+    target.setUTCDate(target.getUTCDate() + 4 - day);
+    const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((target - yearStart) / 86400000) + 1) / 7);
+    return `${target.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+  };
+
+  const getCommissionRateForRole = (role, referenceId) => {
+    if (!referenceId || referenceId === "NA") return 0;
+    if (role === "Superstockist") {
+      const matchedUser = mockUsers.find((user) => user.role === role && user.referenceNumber === referenceId);
+      return matchedUser?.commission ?? fallbackCommissionByRole[role];
+    }
+    return fallbackCommissionByRole[role] ?? 0;
+  };
+
+  const getOrderEarningsBreakdown = (order) => {
+    const total = Number(order.total ?? 0);
+    const ssRate = getCommissionRateForRole("Superstockist", order.referenceIds?.superstockistId);
+    const stockistRate = getCommissionRateForRole("Stockist", order.referenceIds?.stockistId);
+    const dealerRate = getCommissionRateForRole("Dealer", order.referenceIds?.dealerId);
+    const superstockistAmount = Number((total * ssRate / 100).toFixed(2));
+    const stockistAmount = Number((total * stockistRate / 100).toFixed(2));
+    const dealerAmount = Number((total * dealerRate / 100).toFixed(2));
+    const adminAmount = Number((total - superstockistAmount - stockistAmount - dealerAmount).toFixed(2));
+
+    return {
+      admin: { amount: adminAmount },
+      superstockist: { rate: ssRate, amount: superstockistAmount },
+      stockist: { rate: stockistRate, amount: stockistAmount },
+      dealer: { rate: dealerRate, amount: dealerAmount }
+    };
+  };
+
+  const getFilteredAnalyticsOrders = (orders) => {
+    return orders.filter((order) => {
+      const orderDate = parseDashboardOrderDate(order.orderDate);
+      if (!orderDate) return false;
+
+      if (analyticsPeriodType === "date") {
+        return !analyticsDateValue || formatDateInputValue(orderDate) === analyticsDateValue;
+      }
+
+      if (analyticsPeriodType === "week") {
+        return !analyticsWeekValue || getIsoWeekValue(orderDate) === analyticsWeekValue;
+      }
+
+      if (analyticsPeriodType === "month") {
+        return !analyticsMonthValue || formatDateInputValue(orderDate).slice(0, 7) === analyticsMonthValue;
+      }
+
+      if (analyticsPeriodType === "year") {
+        return !analyticsYearValue || String(orderDate.getFullYear()) === analyticsYearValue;
+      }
+
+      return true;
+    });
+  };
+
+  const renderAnalyticsPanel = (role) => {
+    primaryActionBtn.hidden = true;
+
+    const analyticsOrders = role === "admin"
+      ? mockDashboardOrders
+      : mockDashboardOrders.filter((order) => {
+          if (role === "superstockist") return order.referenceIds?.superstockistId === roleReferenceIds.superstockist;
+          if (role === "stockist") return order.referenceIds?.stockistId === roleReferenceIds.stockist;
+          return order.referenceIds?.dealerId === roleReferenceIds.dealer;
+        });
+
+    const visibleOrders = getFilteredAnalyticsOrders(analyticsOrders);
+    const availableYears = Array.from(new Set(analyticsOrders
+      .map((order) => parseDashboardOrderDate(order.orderDate)?.getFullYear())
+      .filter(Boolean)))
+      .sort((left, right) => right - left);
+
+    let periodInputHtml = "";
+    if (analyticsPeriodType === "date") {
+      periodInputHtml = `<input id="analyticsDateInput" class="dashboard-catalog-search" type="date" value="${analyticsDateValue}" aria-label="Filter analytics by date" />`;
+    } else if (analyticsPeriodType === "week") {
+      periodInputHtml = `<input id="analyticsWeekInput" class="dashboard-catalog-search" type="week" value="${analyticsWeekValue}" aria-label="Filter analytics by week" />`;
+    } else if (analyticsPeriodType === "month") {
+      periodInputHtml = `<input id="analyticsMonthInput" class="dashboard-catalog-search" type="month" value="${analyticsMonthValue}" aria-label="Filter analytics by month" />`;
+    } else if (analyticsPeriodType === "year") {
+      periodInputHtml = `
+        <div class="dashboard-catalog-filter-wrap">
+          <label for="analyticsYearInput">Year</label>
+          <select id="analyticsYearInput" class="dashboard-catalog-filter" aria-label="Filter analytics by year">
+            <option value="">All Years</option>
+            ${availableYears.map((year) => `<option value="${year}" ${analyticsYearValue === String(year) ? "selected" : ""}>${year}</option>`).join("")}
+          </select>
+        </div>
+      `;
+    }
+
+    const orderBreakdowns = visibleOrders.map((order) => ({ order, earnings: getOrderEarningsBreakdown(order) }));
+    const maxRoleAmount = Math.max(1, ...orderBreakdowns.map(({ earnings }) => {
+      if (role === "superstockist") return earnings.superstockist.amount;
+      if (role === "stockist") return earnings.stockist.amount;
+      return earnings.dealer.amount;
+    }));
+
+    const totals = orderBreakdowns.reduce((summary, { earnings }) => {
+      summary.admin += earnings.admin.amount;
+      summary.superstockist += earnings.superstockist.amount;
+      summary.stockist += earnings.stockist.amount;
+      summary.dealer += earnings.dealer.amount;
+      return summary;
+    }, { admin: 0, superstockist: 0, stockist: 0, dealer: 0 });
+
+    const roleTitle = roleLabel[role] ?? "Role";
+    const roleCardsHtml = role === "admin"
+      ? `
+        <div class="analytics-summary-grid">
+          <article class="analytics-summary-card"><span>Admin Earnings</span><strong>${formatCurrency(totals.admin)}</strong></article>
+          <article class="analytics-summary-card"><span>Superstockist Earnings</span><strong>${formatCurrency(totals.superstockist)}</strong></article>
+          <article class="analytics-summary-card"><span>Stockist Earnings</span><strong>${formatCurrency(totals.stockist)}</strong></article>
+          <article class="analytics-summary-card"><span>Dealer Earnings</span><strong>${formatCurrency(totals.dealer)}</strong></article>
+          <article class="analytics-summary-card"><span>Orders Count</span><strong>${visibleOrders.length}</strong></article>
+        </div>
+      `
+      : (() => {
+          const roleKey = role === "superstockist" ? "superstockist" : role;
+          const totalAmount = totals[roleKey];
+          const averageAmount = visibleOrders.length ? totalAmount / visibleOrders.length : 0;
+          return `
+            <div class="analytics-summary-grid analytics-summary-grid-compact">
+              <article class="analytics-summary-card"><span>${roleTitle} Earnings</span><strong>${formatCurrency(totalAmount)}</strong></article>
+              <article class="analytics-summary-card"><span>Orders Count</span><strong>${visibleOrders.length}</strong></article>
+              <article class="analytics-summary-card"><span>Average / Order</span><strong>${formatCurrency(averageAmount)}</strong></article>
+            </div>
+          `;
+        })();
+
+    const adminRowsHtml = orderBreakdowns.map(({ order, earnings }) => {
+      const orderTotal = Math.max(1, Number(order.total ?? 0));
+      return `
+      <article class="analytics-order-card">
+        <div class="analytics-order-head">
+          <div>
+            <strong>${order.id}</strong>
+            <p>${order.orderDate} · ${order.customer.firstName} ${order.customer.lastName}</p>
+          </div>
+          <span>${formatCurrency(order.total)}</span>
+        </div>
+        <div class="analytics-bar-group">
+          <div class="analytics-bar-row">
+            <span>Admin</span>
+            <div class="analytics-bar-track"><div class="analytics-bar analytics-bar-admin" style="width:${(earnings.admin.amount / orderTotal) * 100}%"></div></div>
+            <strong>${formatCurrency(earnings.admin.amount)}</strong>
+          </div>
+          <div class="analytics-bar-row">
+            <span>Superstockist</span>
+            <div class="analytics-bar-track"><div class="analytics-bar analytics-bar-superstockist" style="width:${(earnings.superstockist.amount / orderTotal) * 100}%"></div></div>
+            <strong>${formatCurrency(earnings.superstockist.amount)}</strong>
+          </div>
+          <div class="analytics-bar-row">
+            <span>Stockist</span>
+            <div class="analytics-bar-track"><div class="analytics-bar analytics-bar-stockist" style="width:${(earnings.stockist.amount / orderTotal) * 100}%"></div></div>
+            <strong>${formatCurrency(earnings.stockist.amount)}</strong>
+          </div>
+          <div class="analytics-bar-row">
+            <span>Dealer</span>
+            <div class="analytics-bar-track"><div class="analytics-bar analytics-bar-dealer" style="width:${(earnings.dealer.amount / orderTotal) * 100}%"></div></div>
+            <strong>${formatCurrency(earnings.dealer.amount)}</strong>
+          </div>
+        </div>
+      </article>
+    `;
+    }).join("");
+
+    const roleRowsHtml = role === "admin"
+      ? ""
+      : orderBreakdowns.map(({ order, earnings }) => {
+          const roleKey = role === "superstockist" ? "superstockist" : role;
+          const amount = earnings[roleKey].amount;
+          const rate = earnings[roleKey].rate;
+          return `
+            <article class="analytics-order-card">
+              <div class="analytics-order-head">
+                <div>
+                  <strong>${order.id}</strong>
+                  <p>${order.orderDate} · ${order.customer.firstName} ${order.customer.lastName}</p>
+                </div>
+                <span>${formatCurrency(order.total)}</span>
+              </div>
+              <div class="analytics-bar-group">
+                <div class="analytics-bar-row analytics-bar-row-single">
+                  <span>${roleTitle}</span>
+                  <div class="analytics-bar-track"><div class="analytics-bar analytics-bar-${roleKey}" style="width:${(amount / maxRoleAmount) * 100}%"></div></div>
+                  <strong>${formatCurrency(amount)}</strong>
+                </div>
+                <p class="analytics-order-rate">Commission: ${rate}%</p>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+    contentBody.innerHTML = `
+      <div class="dashboard-catalog-controls analytics-controls">
+        <div class="dashboard-catalog-filter-wrap">
+          <label for="analyticsPeriodType">Range</label>
+          <select id="analyticsPeriodType" class="dashboard-catalog-filter" aria-label="Filter analytics range">
+            <option value="all" ${analyticsPeriodType === "all" ? "selected" : ""}>All</option>
+            <option value="date" ${analyticsPeriodType === "date" ? "selected" : ""}>Date</option>
+            <option value="week" ${analyticsPeriodType === "week" ? "selected" : ""}>Week</option>
+            <option value="month" ${analyticsPeriodType === "month" ? "selected" : ""}>Month</option>
+            <option value="year" ${analyticsPeriodType === "year" ? "selected" : ""}>Year</option>
+          </select>
+        </div>
+        ${periodInputHtml}
+      </div>
+      ${roleCardsHtml}
+      <section class="analytics-orders-wrap">
+        ${visibleOrders.length === 0 ? '<p class="dashboard-placeholder">No earnings found for the selected period.</p>' : (role === "admin" ? adminRowsHtml : roleRowsHtml)}
+      </section>
+    `;
+
+    const analyticsPeriodTypeInput = document.getElementById("analyticsPeriodType");
+    const analyticsDateInput = document.getElementById("analyticsDateInput");
+    const analyticsWeekInput = document.getElementById("analyticsWeekInput");
+    const analyticsMonthInput = document.getElementById("analyticsMonthInput");
+    const analyticsYearInput = document.getElementById("analyticsYearInput");
+
+    if (analyticsPeriodTypeInput) {
+      analyticsPeriodTypeInput.addEventListener("change", (event) => {
+        analyticsPeriodType = event.target.value;
+        renderPanelBody();
+      });
+    }
+    if (analyticsDateInput) {
+      analyticsDateInput.addEventListener("change", (event) => {
+        analyticsDateValue = event.target.value;
+        renderPanelBody();
+      });
+    }
+    if (analyticsWeekInput) {
+      analyticsWeekInput.addEventListener("change", (event) => {
+        analyticsWeekValue = event.target.value;
+        renderPanelBody();
+      });
+    }
+    if (analyticsMonthInput) {
+      analyticsMonthInput.addEventListener("change", (event) => {
+        analyticsMonthValue = event.target.value;
+        renderPanelBody();
+      });
+    }
+    if (analyticsYearInput) {
+      analyticsYearInput.addEventListener("change", (event) => {
+        analyticsYearValue = event.target.value;
+        renderPanelBody();
+      });
+    }
+  };
+
   const getImageFileName = (imagePath) => {
     if (!imagePath) return "No file selected";
     const parts = imagePath.split("/");
@@ -1149,10 +1597,84 @@ function renderDashboardPage() {
     userEditorModal.hidden = true;
   };
 
+  const closeUserRoleModal = () => {
+    if (!userRoleEditorModal) return;
+    userRoleEditorModal.hidden = true;
+    editingUserId = null;
+  };
+
   const openUserModal = () => {
     if (!userEditorModal || !userEditorForm) return;
     userEditorForm.reset();
+    const roleSelect = document.getElementById("userRole");
+    const refRow = document.getElementById("userReferenceRow");
+    const pincodeRow = document.getElementById("userPincodeRow");
+    const commissionRow = document.getElementById("userCommissionRow");
+    if (refRow) refRow.hidden = true;
+    if (pincodeRow) pincodeRow.hidden = true;
+    if (commissionRow) commissionRow.hidden = true;
+    if (roleSelect) roleSelect.value = "Admin";
     userEditorModal.hidden = false;
+  };
+
+  const openUserRoleModal = (userId) => {
+    if (!userRoleEditorModal || !userRoleEditorForm || !userId) return;
+    const matchedUser = mockUsers.find((user) => user.id === userId);
+    if (!matchedUser) return;
+
+    editingUserId = userId;
+    userRoleEditorForm.reset();
+
+    const userIdInput = document.getElementById("userRoleEditorId");
+    const roleInput = document.getElementById("userRoleEditorSelect");
+    const userName = document.getElementById("userRoleEditorName");
+
+    const commissionRow = document.getElementById("userRoleCommissionRow");
+    const commissionInput = document.getElementById("userRoleCommission");
+    const pincodeRow = document.getElementById("userRolePincodeRow");
+    const pincodeInput = document.getElementById("userRoleServiceAreaPincode");
+    const commissionRoles = ["Superstockist", "Stockist", "Dealer"];
+    const upgradeRoleOptions = {
+      Admin: ["Admin"],
+      Superstockist: ["Superstockist"],
+      Stockist: ["Stockist", "Superstockist"],
+      Dealer: ["Dealer", "Stockist"],
+      Customer: ["Customer", "Dealer"]
+    };
+
+    const toggleCommissionRow = (role) => {
+      if (!commissionRow) return;
+      commissionRow.hidden = !commissionRoles.includes(role);
+      if (commissionInput) commissionInput.required = commissionRoles.includes(role);
+    };
+
+    const togglePincodeRow = (role) => {
+      const needsPincode = role === "Superstockist";
+      if (pincodeRow) pincodeRow.hidden = !needsPincode;
+      if (pincodeInput) pincodeInput.required = needsPincode;
+    };
+
+    if (userIdInput) userIdInput.value = userId;
+    if (roleInput) {
+      const allowedRoles = upgradeRoleOptions[matchedUser.role] ?? [matchedUser.role];
+      roleInput.innerHTML = allowedRoles
+        .map((roleOption) => `<option value="${roleOption}">${roleOption}</option>`)
+        .join("");
+      roleInput.value = matchedUser.role;
+      roleInput.disabled = false;
+      roleInput.onchange = () => {
+        toggleCommissionRow(roleInput.value);
+        togglePincodeRow(roleInput.value);
+      };
+    }
+    if (commissionInput) commissionInput.value = matchedUser.commission ?? "";
+    if (pincodeInput) pincodeInput.value = matchedUser.serviceAreaPincode ?? "";
+    if (userName) userName.textContent = `${matchedUser.firstName} ${matchedUser.lastName} (${matchedUser.email})`;
+
+    const initialRole = roleInput?.value || matchedUser.role;
+    toggleCommissionRow(initialRole);
+    togglePincodeRow(initialRole);
+    userRoleEditorModal.hidden = false;
   };
 
   const closeStockistDealerFormModal = () => {
@@ -1180,6 +1702,64 @@ function renderDashboardPage() {
     if (!deleteConfirmModal) return;
     deleteConfirmModal.hidden = true;
     pendingDeleteAction = null;
+  };
+
+  const closeOrderUpdateFormModal = () => {
+    if (!orderUpdateModal) return;
+    orderUpdateModal.hidden = true;
+  };
+
+  const openOrderUpdateFormModal = (orderId) => {
+    if (!orderUpdateModal || !orderUpdateForm || !orderId) return;
+    const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+    if (!matchedOrder) return;
+
+    const orderIdInput = document.getElementById("orderUpdateOrderId");
+    const modalTitle = document.getElementById("orderUpdateTitle");
+    const modalCopy = document.getElementById("orderUpdateCopy");
+    const currentSsRow = document.getElementById("orderUpdateCurrentSsRow");
+    const currentSsValue = document.getElementById("orderUpdateCurrentSs");
+    const selectLabel = document.getElementById("orderUpdateSelectLabel");
+    const superstockistSelect = document.getElementById("orderUpdateSuperstockistSelect");
+
+    if (!orderIdInput || !modalTitle || !modalCopy || !currentSsRow || !currentSsValue || !selectLabel || !superstockistSelect) return;
+
+    const superstockistUsers = mockUsers.filter((user) => user.role === "Superstockist");
+    const currentRef = matchedOrder.referenceIds?.superstockistId ?? "NA";
+    const isGuestOrder = Boolean(matchedOrder.isGuest);
+    const hasAssignedSuperstockist = currentRef !== "NA";
+    const isGuestOrderNeedingAssignment = isGuestOrder && !hasAssignedSuperstockist;
+
+    if (orderIdInput) orderIdInput.value = matchedOrder.id;
+
+    modalTitle.textContent = isGuestOrderNeedingAssignment ? "Assign Superstockist" : "Modify Superstockist";
+    modalCopy.textContent = isGuestOrderNeedingAssignment
+      ? "Select a Superstockist for this guest order."
+      : "Modify the Superstockist assignment for this order.";
+    selectLabel.textContent = isGuestOrderNeedingAssignment ? "Assign Superstockist" : "Modify Superstockist";
+
+    currentSsRow.hidden = isGuestOrderNeedingAssignment;
+    currentSsValue.textContent = currentRef;
+
+    superstockistSelect.innerHTML = superstockistUsers
+      .map((user) => {
+        const displayPincode = user.serviceAreaPincode || "NA";
+        const displayRef = user.referenceNumber || "NA";
+        return `<option value="${displayRef}">${user.email} - ${displayPincode}</option>`;
+      })
+      .join("");
+
+    if (superstockistUsers.length === 0) {
+      superstockistSelect.innerHTML = '<option value="">No superstockist available</option>';
+      superstockistSelect.disabled = true;
+    } else {
+      superstockistSelect.disabled = false;
+      if (superstockistUsers.some((user) => user.referenceNumber === currentRef)) {
+        superstockistSelect.value = currentRef;
+      }
+    }
+
+    orderUpdateModal.hidden = false;
   };
 
   const openDeleteModal = (title, message, onConfirm) => {
@@ -1243,20 +1823,32 @@ function renderDashboardPage() {
     if (!productEditorModal || !productEditorForm || !productEditorTitle) return;
 
     editingProductId = product?.id ?? null;
-    productEditorTitle.textContent = product ? "Update Product" : "Add New Product";
+    const isUpdateMode = Boolean(product);
+    productEditorTitle.textContent = isUpdateMode ? "Update Product" : "Add Product";
+    if (productEditorSubmitBtn) {
+      productEditorSubmitBtn.textContent = isUpdateMode ? "Update Product" : "Add Product";
+    }
 
     const titleInput = document.getElementById("editorTitle");
     const categoryInput = document.getElementById("editorCategory");
     const descriptionInput = document.getElementById("editorDescription");
-    const priceInput = document.getElementById("editorPrice");
+    const mrpInput = document.getElementById("editorMrp");
+    const discountedPriceInput = document.getElementById("editorDiscountedPrice");
+    const stockCountInput = document.getElementById("editorStockCount");
     const imageInput = document.getElementById("editorImage");
 
-    if (!titleInput || !categoryInput || !descriptionInput || !priceInput || !imageInput) return;
+    if (!titleInput || !categoryInput || !descriptionInput || !mrpInput || !discountedPriceInput || !stockCountInput || !imageInput) return;
 
     titleInput.value = product?.title ?? "";
     categoryInput.value = product?.category ?? "grains";
     descriptionInput.value = product?.description ?? "";
-    priceInput.value = product ? String(product.price) : "";
+    const safeDiscountedPrice = Number(product?.price ?? 0);
+    const fallbackMrp = Number((safeDiscountedPrice * 1.2).toFixed(2));
+    const safeMrp = Number(product?.mrp ?? fallbackMrp);
+    const safeStockCount = Number(product?.stockCount ?? 0);
+    mrpInput.value = product ? String(safeMrp) : "";
+    discountedPriceInput.value = product ? String(safeDiscountedPrice) : "";
+    stockCountInput.value = product ? String(safeStockCount) : "";
     imageInput.value = product?.image ?? "";
     if (mockUploadFileName) {
       mockUploadFileName.textContent = getImageFileName(imageInput.value);
@@ -1388,7 +1980,8 @@ function renderDashboardPage() {
   const renderOrdersAccordion = (orders, emptyMessage = "No orders found.", options = {}) => {
     const {
       container = contentBody,
-      showDispatchActions = false
+      showDispatchActions = false,
+      showOrderUpdateAction = false
     } = options;
 
     primaryActionBtn.hidden = true;
@@ -1405,6 +1998,25 @@ function renderDashboardPage() {
         ${orders
           .map((order, index) => {
             const isOpen = index === 0;
+            const isGuestOrder = Boolean(order.isGuest);
+            const hasAssignedSuperstockist = Boolean(
+              order.referenceIds?.superstockistId && order.referenceIds.superstockistId !== "NA"
+            );
+            const refIds = isGuestOrder
+              ? {
+                  superstockistId: hasAssignedSuperstockist ? order.referenceIds.superstockistId : "NA",
+                  stockistId: "NA",
+                  dealerId: "NA"
+                }
+              : order.referenceIds;
+            const superstockistUser = mockUsers.find(
+              (user) => user.role === "Superstockist" && user.referenceNumber === refIds.superstockistId
+            );
+            const superstockistDisplay = showOrderUpdateAction
+              ? (superstockistUser
+                  ? `${superstockistUser.email} - ${superstockistUser.serviceAreaPincode ?? "NA"}`
+                  : "NA")
+              : refIds.superstockistId;
             const dispatchAt = order.dispatch?.completedAt ?? "";
             const dispatchComments = order.dispatch?.comments ?? "";
             const dispatchState = order.dispatch?.status ?? (dispatchAt ? "dispatched" : "pending");
@@ -1424,6 +2036,7 @@ function renderDashboardPage() {
                   <div class="dashboard-order-summary-left">
                     <strong>${order.id}</strong>
                     <p>${order.orderDate}</p>
+                    ${isGuestOrder ? `<span class="dashboard-order-guest-chip">${hasAssignedSuperstockist ? "Guest Order - Assigned" : "Guest Order - Action Required"}</span>` : ""}
                   </div>
                   <div class="dashboard-order-summary-right">
                     <span class="dashboard-order-status">${order.status}</span>
@@ -1433,9 +2046,9 @@ function renderDashboardPage() {
 
                 <div class="dashboard-order-accordion-body" ${isOpen ? "" : "hidden"}>
                   <div class="dashboard-order-refs">
-                    <span class="dashboard-order-ref-chip"><strong>Superstockist ID:</strong> ${order.referenceIds.superstockistId}</span>
-                    <span class="dashboard-order-ref-chip"><strong>Stockist ID:</strong> ${order.referenceIds.stockistId}</span>
-                    <span class="dashboard-order-ref-chip"><strong>Dealer ID:</strong> ${order.referenceIds.dealerId}</span>
+                    <span class="dashboard-order-ref-chip"><strong>Superstockist Assigned:</strong> ${superstockistDisplay}</span>
+                    <span class="dashboard-order-ref-chip"><strong>Stockist ID:</strong> ${refIds.stockistId}</span>
+                    <span class="dashboard-order-ref-chip"><strong>Dealer ID:</strong> ${refIds.dealerId}</span>
                   </div>
 
                   <div class="dashboard-order-customer">
@@ -1450,6 +2063,12 @@ function renderDashboardPage() {
                     <span>${order.itemCount} items</span>
                     <strong>${formatCurrency(order.total)}</strong>
                   </div>
+
+                  ${showOrderUpdateAction ? `
+                    <div class="dashboard-dispatch-actions">
+                      <button type="button" class="dashboard-primary-btn" data-update-order="${order.id}"><span aria-hidden="true">✎</span> Update Order</button>
+                    </div>
+                  ` : ""}
 
                   ${showDispatchActions ? `
                     <div class="dashboard-dispatch-actions">
@@ -1490,6 +2109,15 @@ function renderDashboardPage() {
         const orderId = button.getAttribute("data-dispatch-complete-order");
         if (!orderId) return;
         openDispatchCompleteFormModal(orderId);
+      });
+    });
+
+    const updateOrderButtons = Array.from(container.querySelectorAll("[data-update-order]"));
+    updateOrderButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const orderId = button.getAttribute("data-update-order");
+        if (!orderId) return;
+        openOrderUpdateFormModal(orderId);
       });
     });
   };
@@ -1547,12 +2175,40 @@ function renderDashboardPage() {
       primaryActionBtn.hidden = false;
       primaryActionBtn.textContent = "+ Add User";
 
-      const totalUserPages = Math.max(1, Math.ceil(mockUsers.length / USER_TABLE_ITEMS_PER_PAGE));
+      const emailQuery = userMgmtSearchTerm.trim().toLowerCase();
+      const filteredUsers = mockUsers.filter((user) => {
+        const matchesEmail = !emailQuery || user.email.toLowerCase().includes(emailQuery);
+        const matchesRole = userMgmtRoleFilter === "all" || user.role === userMgmtRoleFilter;
+        return matchesEmail && matchesRole;
+      });
+
+      const totalUserPages = Math.max(1, Math.ceil(filteredUsers.length / USER_TABLE_ITEMS_PER_PAGE));
       userManagementPage = Math.min(userManagementPage, totalUserPages);
       const userStart = (userManagementPage - 1) * USER_TABLE_ITEMS_PER_PAGE;
-      const pageUsers = mockUsers.slice(userStart, userStart + USER_TABLE_ITEMS_PER_PAGE);
+      const pageUsers = filteredUsers.slice(userStart, userStart + USER_TABLE_ITEMS_PER_PAGE);
 
       contentBody.innerHTML = `
+        <div class="dashboard-catalog-controls">
+          <input
+            id="userMgmtSearch"
+            class="dashboard-catalog-search"
+            type="search"
+            placeholder="Search by email"
+            value="${userMgmtSearchTerm}"
+            aria-label="Search users by email"
+          />
+          <div class="dashboard-catalog-filter-wrap">
+            <label for="userMgmtRoleFilter">Role</label>
+            <select id="userMgmtRoleFilter" class="dashboard-catalog-filter" aria-label="Filter by role">
+              <option value="all" ${userMgmtRoleFilter === "all" ? "selected" : ""}>All Roles</option>
+              <option value="Customer" ${userMgmtRoleFilter === "Customer" ? "selected" : ""}>Customer</option>
+              <option value="Stockist" ${userMgmtRoleFilter === "Stockist" ? "selected" : ""}>Stockist</option>
+              <option value="Superstockist" ${userMgmtRoleFilter === "Superstockist" ? "selected" : ""}>Superstockist</option>
+              <option value="Admin" ${userMgmtRoleFilter === "Admin" ? "selected" : ""}>Admin</option>
+            </select>
+          </div>
+        </div>
+
         <div class="dashboard-table-wrap">
           <table class="dashboard-table" aria-label="User management table">
             <thead>
@@ -1562,40 +2218,81 @@ function renderDashboardPage() {
                 <th>Gmail ID</th>
                 <th>Role</th>
                 <th>Reference Number</th>
+                <th>Service Area Pincode</th>
+                <th>Commission %</th>
+                <th>Update User</th>
                 <th>Remove User</th>
               </tr>
             </thead>
             <tbody>
-              ${pageUsers
+              ${pageUsers.length === 0 ? `<tr><td colspan="9" class="dashboard-table-empty">No users match your search.</td></tr>` : pageUsers
                 .map(
-                  (user) => `
+                  (user) => {
+                    const hasCommission = ["Superstockist", "Stockist", "Dealer"].includes(user.role);
+                    const commissionDisplay = hasCommission ? `${user.commission ?? 0}%` : "NA";
+                    const refDisplay = ["Admin", "Superstockist", "Customer"].includes(user.role) ? "NA" : user.referenceNumber;
+                    const serviceAreaPincodeDisplay = user.role === "Superstockist" ? (user.serviceAreaPincode ?? "NA") : "NA";
+                    return `
                     <tr>
                       <td>${user.firstName}</td>
                       <td>${user.lastName}</td>
                       <td>${user.email}</td>
                       <td>${user.role}</td>
-                      <td>${user.referenceNumber}</td>
+                      <td>${refDisplay}</td>
+                      <td>${serviceAreaPincodeDisplay}</td>
+                      <td>${commissionDisplay}</td>
+                      <td>
+                        <button type="button" class="dashboard-update-btn" data-update-user="${user.id}">Update</button>
+                      </td>
                       <td>
                         <button type="button" class="dashboard-remove-btn" data-remove-user="${user.id}">Remove</button>
                       </td>
                     </tr>
-                  `
+                  `;
+                  }
                 )
                 .join("")}
             </tbody>
           </table>
         </div>
 
-        ${totalUserPages > 1 ? `
-          <div class="dashboard-catalog-pagination">
-            <button type="button" class="page-btn" id="userPagePrev" ${userManagementPage === 1 ? "disabled" : ""}>Prev</button>
-            <span class="page-indicator">Page ${userManagementPage} / ${totalUserPages}</span>
-            <button type="button" class="page-btn" id="userPageNext" ${userManagementPage === totalUserPages ? "disabled" : ""}>Next</button>
-          </div>
-        ` : ""}
+        <div class="dashboard-catalog-pagination">
+          <button type="button" class="page-btn" id="userPagePrev" ${userManagementPage === 1 ? "disabled" : ""}>Prev</button>
+          <span class="page-indicator">Page ${userManagementPage} / ${totalUserPages}</span>
+          <button type="button" class="page-btn" id="userPageNext" ${userManagementPage === totalUserPages ? "disabled" : ""}>Next</button>
+        </div>
       `;
 
+      const userSearchInput = document.getElementById("userMgmtSearch");
+      const userRoleFilterInput = document.getElementById("userMgmtRoleFilter");
+
+      if (userSearchInput) {
+        userSearchInput.addEventListener("input", (e) => {
+          userMgmtSearchTerm = e.target.value;
+          userManagementPage = 1;
+          renderPanelBody();
+        });
+      }
+
+      if (userRoleFilterInput) {
+        userRoleFilterInput.addEventListener("change", (e) => {
+          userMgmtRoleFilter = e.target.value;
+          userManagementPage = 1;
+          renderPanelBody();
+        });
+      }
+
       const removeButtons = contentBody.querySelectorAll("[data-remove-user]");
+      const updateButtons = contentBody.querySelectorAll("[data-update-user]");
+
+      updateButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const userId = button.getAttribute("data-update-user");
+          if (!userId) return;
+          openUserRoleModal(userId);
+        });
+      });
+
       removeButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const userId = button.getAttribute("data-remove-user");
@@ -1634,7 +2331,65 @@ function renderDashboardPage() {
     }
 
     if (activeRole === "admin" && activeMenuItem === "View Orders") {
-      renderOrdersAccordion(mockDashboardOrders);
+      const orderQuery = adminOrderSearchTerm.trim().toLowerCase();
+      const filteredOrders = mockDashboardOrders.filter((order) => {
+        const matchesSearch = !orderQuery
+          || order.id.toLowerCase().includes(orderQuery)
+          || `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase().includes(orderQuery)
+          || order.customer.email.toLowerCase().includes(orderQuery);
+        const matchesFilter = adminOrderFilterValue === "all"
+          || (adminOrderFilterValue === "guest" && Boolean(order.isGuest));
+        return matchesSearch && matchesFilter;
+      });
+
+      contentBody.innerHTML = `
+        <div class="dashboard-catalog-controls">
+          <input
+            id="adminOrderSearch"
+            class="dashboard-catalog-search"
+            type="search"
+            placeholder="Search by order ID, customer, or email"
+            value="${adminOrderSearchTerm}"
+            aria-label="Search admin orders"
+          />
+          <div class="dashboard-catalog-filter-wrap">
+            <label for="adminOrderFilter">Filter</label>
+            <select id="adminOrderFilter" class="dashboard-catalog-filter" aria-label="Filter admin orders">
+              <option value="all" ${adminOrderFilterValue === "all" ? "selected" : ""}>All Orders</option>
+              <option value="guest" ${adminOrderFilterValue === "guest" ? "selected" : ""}>Guest Orders</option>
+            </select>
+          </div>
+        </div>
+        <div id="adminOrdersTarget"></div>
+      `;
+
+      const adminOrderSearch = document.getElementById("adminOrderSearch");
+      const adminOrderFilter = document.getElementById("adminOrderFilter");
+      const adminOrdersTarget = document.getElementById("adminOrdersTarget");
+
+      if (adminOrderSearch) {
+        adminOrderSearch.addEventListener("input", (event) => {
+          adminOrderSearchTerm = event.target.value;
+          renderPanelBody();
+        });
+      }
+
+      if (adminOrderFilter) {
+        adminOrderFilter.addEventListener("change", (event) => {
+          adminOrderFilterValue = event.target.value;
+          renderPanelBody();
+        });
+      }
+
+      renderOrdersAccordion(filteredOrders, "No orders found.", {
+        container: adminOrdersTarget,
+        showOrderUpdateAction: true
+      });
+      return;
+    }
+
+    if (activeRole === "admin" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+      renderAnalyticsPanel("admin");
       return;
     }
 
@@ -1645,6 +2400,11 @@ function renderDashboardPage() {
       );
       renderSuperstockistDispatchPanel(filteredOrders);
 
+      return;
+    }
+
+    if (activeRole === "superstockist" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+      renderAnalyticsPanel("superstockist");
       return;
     }
 
@@ -1777,6 +2537,11 @@ function renderDashboardPage() {
       return;
     }
 
+    if (activeRole === "stockist" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+      renderAnalyticsPanel("stockist");
+      return;
+    }
+
     if (activeRole === "dealer" && activeMenuItem === "View Orders") {
       const dealerReferenceId = roleReferenceIds.dealer;
       const filteredOrders = mockDashboardOrders.filter(
@@ -1786,18 +2551,23 @@ function renderDashboardPage() {
       return;
     }
 
+    if (activeRole === "dealer" && (activeMenuItem === "Earnings Summary" || activeMenuItem === "Analytics")) {
+      renderAnalyticsPanel("dealer");
+      return;
+    }
+
     primaryActionBtn.hidden = true;
     contentBody.innerHTML = `<p class="dashboard-placeholder">${activeMenuItem} section is ready for configuration.</p>`;
   };
 
   const setSelectedMenuItem = (itemName, label) => {
-    activeMenuItem = itemName;
+    activeMenuItem = itemName === "Analytics" ? "Earnings Summary" : itemName;
 
     const hideHeaderForAdminView =
-      (activeRole === "admin" && (itemName === "Manage Product Catalog" || itemName === "User Management" || itemName === "View Orders"))
-      || (activeRole === "superstockist" && (itemName === "Invite Stockist or Dealers" || itemName === "View Orders"))
-      || (activeRole === "stockist" && (itemName === "Invite Dealer" || itemName === "View Orders"))
-      || (activeRole === "dealer" && itemName === "View Orders");
+      (activeRole === "admin" && (activeMenuItem === "Manage Product Catalog" || activeMenuItem === "User Management" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
+      || (activeRole === "superstockist" && (activeMenuItem === "Invite Stockist or Dealers" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
+      || (activeRole === "stockist" && (activeMenuItem === "Invite Dealer" || activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"))
+      || (activeRole === "dealer" && (activeMenuItem === "View Orders" || activeMenuItem === "Earnings Summary"));
 
     if (hideHeaderForAdminView) {
       contentTitle.textContent = "";
@@ -1807,13 +2577,13 @@ function renderDashboardPage() {
     } else {
       contentTitle.hidden = false;
       contentCopy.hidden = false;
-      contentTitle.textContent = itemName;
-      contentCopy.textContent = `${label} panel: ${itemName}.`;
+      contentTitle.textContent = activeMenuItem;
+      contentCopy.textContent = `${label} panel: ${activeMenuItem}.`;
     }
 
     const allMenuButtons = sidebarMenu.querySelectorAll(".dashboard-menu-btn");
     allMenuButtons.forEach((button) => {
-      const isActive = button.dataset.menuItem === itemName;
+      const isActive = button.dataset.menuItem === activeMenuItem || (activeMenuItem === "Earnings Summary" && button.dataset.menuItem === "Analytics");
       button.classList.toggle("active", isActive);
       button.setAttribute("aria-current", isActive ? "page" : "false");
     });
@@ -1829,7 +2599,7 @@ function renderDashboardPage() {
     sidebarTitle.textContent = label;
     if (sidebarRefChip) {
       const referenceId = roleReferenceIds[role];
-      if (referenceId) {
+      if (referenceId && role !== "superstockist") {
         sidebarRefChip.textContent = `Your reference number: ${referenceId}`;
         sidebarRefChip.hidden = false;
       } else {
@@ -1854,7 +2624,10 @@ function renderDashboardPage() {
     });
 
     if (menuItems.length > 0) {
-      setSelectedMenuItem(menuItems[0], label);
+      const defaultMenuItem = roleDefaultMenuItems[role] && menuItems.includes(roleDefaultMenuItems[role])
+        ? roleDefaultMenuItems[role]
+        : menuItems[0];
+      setSelectedMenuItem(defaultMenuItem, label);
     } else {
       contentBody.innerHTML = "";
       primaryActionBtn.hidden = true;
@@ -1900,6 +2673,12 @@ function renderDashboardPage() {
     });
   }
 
+  if (userRoleEditorModal) {
+    userRoleEditorModal.addEventListener("click", (event) => {
+      if (event.target === userRoleEditorModal) closeUserRoleModal();
+    });
+  }
+
   if (stockistDealerModal) {
     stockistDealerModal.addEventListener("click", (event) => {
       if (event.target === stockistDealerModal) closeStockistDealerFormModal();
@@ -1924,6 +2703,12 @@ function renderDashboardPage() {
     });
   }
 
+  if (orderUpdateModal) {
+    orderUpdateModal.addEventListener("click", (event) => {
+      if (event.target === orderUpdateModal) closeOrderUpdateFormModal();
+    });
+  }
+
   if (closeProductEditor) {
     closeProductEditor.addEventListener("click", closeEditorModal);
   }
@@ -1938,6 +2723,14 @@ function renderDashboardPage() {
 
   if (cancelUserEditor) {
     cancelUserEditor.addEventListener("click", closeUserModal);
+  }
+
+  if (closeUserRoleEditor) {
+    closeUserRoleEditor.addEventListener("click", closeUserRoleModal);
+  }
+
+  if (cancelUserRoleEditor) {
+    cancelUserRoleEditor.addEventListener("click", closeUserRoleModal);
   }
 
   if (closeStockistDealerModal) {
@@ -1970,6 +2763,14 @@ function renderDashboardPage() {
 
   if (cancelDeleteConfirmModal) {
     cancelDeleteConfirmModal.addEventListener("click", closeDeleteModal);
+  }
+
+  if (closeOrderUpdateModal) {
+    closeOrderUpdateModal.addEventListener("click", closeOrderUpdateFormModal);
+  }
+
+  if (cancelOrderUpdateModal) {
+    cancelOrderUpdateModal.addEventListener("click", closeOrderUpdateFormModal);
   }
 
   if (confirmDeleteConfirmModal) {
@@ -2007,10 +2808,14 @@ function renderDashboardPage() {
       const title = String(formData.get("title") ?? "").trim();
       const category = String(formData.get("category") ?? "grains").trim();
       const description = String(formData.get("description") ?? "").trim();
-      const price = Number(formData.get("price"));
+      const mrp = Number(formData.get("mrp"));
+      const discountedPrice = Number(formData.get("discountedPrice"));
+      const stockCount = Number(formData.get("stockCount"));
       const customImage = String(formData.get("image") ?? "").trim();
 
-      if (!title || !description || Number.isNaN(price) || price <= 0) return;
+      if (!title || !description || Number.isNaN(mrp) || Number.isNaN(discountedPrice) || Number.isNaN(stockCount) || mrp <= 0 || discountedPrice <= 0 || discountedPrice >= mrp || stockCount < 0) {
+        return;
+      }
 
       const fallbackImage = createGroceryImage(title, category, "#e8f0e3", "#8fb57d");
       const finalImage = customImage || fallbackImage;
@@ -2021,7 +2826,9 @@ function renderDashboardPage() {
           existingProduct.title = title;
           existingProduct.category = category;
           existingProduct.description = description;
-          existingProduct.price = price;
+          existingProduct.mrp = mrp;
+          existingProduct.price = discountedPrice;
+          existingProduct.stockCount = Math.floor(stockCount);
           existingProduct.image = finalImage;
         }
       } else {
@@ -2038,7 +2845,9 @@ function renderDashboardPage() {
           title,
           category,
           description,
-          price,
+          mrp,
+          price: discountedPrice,
+          stockCount: Math.floor(stockCount),
           image: finalImage
         });
       }
@@ -2049,6 +2858,34 @@ function renderDashboardPage() {
   }
 
   if (userEditorForm) {
+    const userRoleSelect = document.getElementById("userRole");
+    const userReferenceRow = document.getElementById("userReferenceRow");
+    const userPincodeRow = document.getElementById("userPincodeRow");
+    const userPincodeInput = document.getElementById("userServiceAreaPincode");
+    const userCommissionRow = document.getElementById("userCommissionRow");
+    const userCommissionInput = document.getElementById("userCommission");
+
+    const rolesWithoutRef = ["Admin", "Customer", "Superstockist"];
+    const commissionRoles = ["Superstockist", "Stockist", "Dealer"];
+
+    const toggleRoleDependentRows = (role) => {
+      if (!userReferenceRow) return;
+      userReferenceRow.hidden = rolesWithoutRef.includes(role);
+      const needsPincode = role === "Superstockist";
+      const needsCommission = commissionRoles.includes(role);
+      if (userPincodeRow) userPincodeRow.hidden = !needsPincode;
+      if (userPincodeInput) userPincodeInput.required = needsPincode;
+      if (userCommissionRow) userCommissionRow.hidden = !needsCommission;
+      if (userCommissionInput) userCommissionInput.required = needsCommission;
+    };
+
+    if (userRoleSelect) {
+      userRoleSelect.addEventListener("change", () => {
+        toggleRoleDependentRows(userRoleSelect.value);
+      });
+      toggleRoleDependentRows(userRoleSelect.value);
+    }
+
     userEditorForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
@@ -2057,22 +2894,84 @@ function renderDashboardPage() {
       const lastName = String(formData.get("lastName") ?? "").trim();
       const email = String(formData.get("email") ?? "").trim();
       const role = String(formData.get("role") ?? "Stockist").trim();
-      const referenceNumber = String(formData.get("referenceNumber") ?? "").trim();
+      const referenceNumber = rolesWithoutRef.includes(role)
+        ? "NA"
+        : String(formData.get("referenceNumber") ?? "").trim();
+      const serviceAreaPincode = role === "Superstockist"
+        ? String(formData.get("serviceAreaPincode") ?? "").trim()
+        : "";
+      const commission = commissionRoles.includes(role)
+        ? Number(formData.get("commission"))
+        : null;
 
-      if (!firstName || !lastName || !email || !referenceNumber) return;
+      if (!firstName || !lastName || !email) return;
+      if (!rolesWithoutRef.includes(role) && !referenceNumber) return;
+      if (role === "Superstockist" && !serviceAreaPincode) return;
+      if (commissionRoles.includes(role) && (Number.isNaN(commission) || commission < 0 || commission > 100)) return;
 
       const newId = `usr-${Date.now()}`;
-      mockUsers.unshift({
+      const newUser = {
         id: newId,
         firstName,
         lastName,
         email,
         role,
         referenceNumber
-      });
+      };
+      if (role === "Superstockist") {
+        newUser.serviceAreaPincode = serviceAreaPincode;
+      }
+      if (commissionRoles.includes(role)) {
+        newUser.commission = commission;
+      }
+
+      mockUsers.unshift(newUser);
 
       userManagementPage = 1;
       closeUserModal();
+      renderPanelBody();
+    });
+  }
+
+  if (userRoleEditorForm) {
+    userRoleEditorForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(userRoleEditorForm);
+      const userId = String(formData.get("userId") ?? editingUserId ?? "").trim();
+      if (!userId) return;
+
+      const matchedUser = mockUsers.find((user) => user.id === userId);
+      if (!matchedUser) return;
+
+      let role = String(formData.get("role") ?? "").trim();
+      if (!role) role = matchedUser.role;
+
+      const commissionRoles = ["Superstockist", "Stockist", "Dealer"];
+      const commission = commissionRoles.includes(role)
+        ? Number(formData.get("commission"))
+        : null;
+      const serviceAreaPincode = role === "Superstockist"
+        ? String(formData.get("serviceAreaPincode") ?? "").trim()
+        : "";
+
+      if (commissionRoles.includes(role) && (Number.isNaN(commission) || commission < 0 || commission > 100)) return;
+      if (role === "Superstockist" && !serviceAreaPincode) return;
+
+      matchedUser.role = role;
+      if (commissionRoles.includes(role)) {
+        matchedUser.commission = commission;
+      } else {
+        delete matchedUser.commission;
+      }
+
+      if (role === "Superstockist") {
+        matchedUser.serviceAreaPincode = serviceAreaPincode;
+      } else {
+        delete matchedUser.serviceAreaPincode;
+      }
+
+      closeUserRoleModal();
       renderPanelBody();
     });
   }
@@ -2157,6 +3056,26 @@ function renderDashboardPage() {
       matchedOrder.status = dispatchStatus === "cancelled" ? "Cancelled" : "Dispatched";
 
       closeDispatchCompleteFormModal();
+      renderPanelBody();
+    });
+  }
+
+  if (orderUpdateForm) {
+    orderUpdateForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(orderUpdateForm);
+      const orderId = String(formData.get("orderId") ?? "").trim();
+      const superstockistRef = String(formData.get("superstockistRef") ?? "").trim();
+
+      if (!orderId || !superstockistRef) return;
+
+      const matchedOrder = mockDashboardOrders.find((order) => order.id === orderId);
+      if (!matchedOrder) return;
+
+      matchedOrder.referenceIds.superstockistId = superstockistRef;
+
+      closeOrderUpdateFormModal();
       renderPanelBody();
     });
   }
